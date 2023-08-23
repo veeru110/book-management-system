@@ -1,0 +1,37 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.0-M1'
+	id 'io.spring.dependency-management' version '1.1.2'
+}
+
+group = 'com.bookstore'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencies {
+
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.1.0'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
+
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //specification
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33' //connection and mysql related stuff
+
+	//implementation 'org.springframework.boot:spring-boot-starter-security:3.0.4'
+
+
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

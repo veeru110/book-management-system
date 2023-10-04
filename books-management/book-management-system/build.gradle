@@ -22,11 +22,24 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
 
 
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //specification
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33' //connection and mysql related stuff
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
 
-	//implementation 'org.springframework.boot:spring-boot-starter-security:3.0.4'
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.0.5'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	implementation 'commons-lang:commons-lang:2.6'
+	implementation 'net.sf.dozer:dozer:5.5.1'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.2'
+
+
+
+
+
+
 
 
 

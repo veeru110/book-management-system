@@ -7,4 +7,8 @@ import java.util.Optional;
 public interface IUserManager {
 
     Optional<User> findByUserName(String userName);
+
+    Integer countAllUsers();
+
+    void save(User user);
 }

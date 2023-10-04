@@ -20,6 +20,16 @@ public class UserManagerImpl implements IUserManager {
 
     @Override
     public Optional<User> findByUserName(String userName) {
-        return userRepository.findByUserNameAndIsDeletedFalseAndIsActiveTrue(userName);
+        return userRepository.findByEmailAndIsDeletedFalseAndIsActiveTrue(userName);
+    }
+
+    @Override
+    public Integer countAllUsers() {
+        return userRepository.countAllUsers();
+    }
+
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

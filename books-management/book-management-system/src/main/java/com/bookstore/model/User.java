@@ -1,6 +1,6 @@
 package com.bookstore.model;
 
-import com.bookstore.constants.UserType;
+import com.bookstore.constants.UserRole;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,17 +13,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_seq")
     private Integer userId;
 
-    @Column(name = "user_name",unique = true)
-    private String userName;
-
     @Column(name = "password")
     private String password;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 
     @Column(name = "first_name")
     private String firstName;
@@ -33,10 +30,18 @@ public class User {
 
     @Column(name = "email", unique = true)
     private String email;
+    @Column(name = "role")
+    private String role;
 
-    @Column(name = "user_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
 
     public Integer getUserId() {
         return userId;
@@ -44,14 +49,6 @@ public class User {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getFirstName() {
@@ -76,14 +73,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
     }
 
     public String getPassword() {
@@ -114,11 +103,13 @@ public class User {
     public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
         sb.append("userId=").append(userId);
-        sb.append(", userName='").append(userName).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", isActive=").append(isActive);
+        sb.append(", isDeleted=").append(isDeleted);
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", email='").append(email).append('\'');
-        sb.append(", userType=").append(userType);
+        sb.append(", role=").append(role);
         sb.append('}');
         return sb.toString();
     }

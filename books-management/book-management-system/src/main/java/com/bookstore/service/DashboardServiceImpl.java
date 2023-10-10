@@ -15,7 +15,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public DashboardVo getDashboardStats() {
+    public DashboardVo getDashboardStats() throws RuntimeException{
         DashboardVo dashboardVo = new DashboardVo();
         Integer usersCount = userManager.countAllUsers();
         dashboardVo.setRegisteredUsers(usersCount);

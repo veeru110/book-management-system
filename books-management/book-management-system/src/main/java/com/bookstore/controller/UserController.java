@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Validated
 @RestController
 public class UserController {
 
@@ -38,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/getUserInfo")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN','BUYER','SELLER')")
     public ResponseEntity<UserVo> getUserInfo() {
         return new ResponseEntity<>(userService.getUserVo(), HttpStatus.OK);
     }

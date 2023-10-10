@@ -4,7 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,14 +16,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.bookstore.constants.Constants.AUTHORIZATION;
-import static com.bookstore.constants.Constants.BEARER;
+import static com.bookstore.constants.Constants.*;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
     private final UserDetailsService userDetailsService;
+
+    private final ThreadLocal<String> threadLocalAuthBearer = new ThreadLocal<>();
 
     @Autowired
     public JWTAuthenticationFilter(JWTService jwtService, UserDetailsService userDetailsService) {
@@ -40,6 +41,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        for (String contextPath : UNAUTHENTICATED_CONTEXT_PATHS) {
+            if (StringUtils.contains(request.getServletPath(), contextPath)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        }
         String jwtToken = authHeader.substring(7);
         String userName = jwtService.getUserNameFromJWTToken(jwtToken);
         //check if user is not authenticated yet
@@ -52,6 +59,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
+        threadLocalAuthBearer.set(authHeader);
         //send to Dispatcher servlet
         filterChain.doFilter(request, response);
     }

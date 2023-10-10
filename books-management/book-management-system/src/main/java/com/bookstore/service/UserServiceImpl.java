@@ -51,21 +51,25 @@ public class UserServiceImpl implements IUserService {
         this.userManager = userManager;
     }
 
-    //TO DO Error handling
     @Override
-    public UserRegistrationResponseVo registerUser(UserRegistrationCommand userRegistrationCommand, String privateKey) {
-        UserRole userRole = UserRole.valueOf(userRegistrationCommand.getRole());
-        if (Objects.equals(userRole, UserRole.ADMIN)) {
-            if (!StringUtils.equals(new String(JWTService.getPrivateKey().getEncoded()), privateKey)) {
-                throw new AuthenticationServiceException("Not allowed");
+    public UserRegistrationResponseVo registerUser(UserRegistrationCommand userRegistrationCommand, String privateKey) throws RuntimeException {
+        try {
+            UserRole userRole = UserRole.valueOf(userRegistrationCommand.getRole());
+            if (Objects.equals(userRole, UserRole.ADMIN)) {
+                if (!StringUtils.equals(new String(JWTService.getPrivateKey().getEncoded()), privateKey)) {
+                    throw new AuthenticationServiceException("Not allowed");
+                }
             }
+            User user = mapper.map(userRegistrationCommand, User.class);
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+            user.setRole(userRole.name());
+            userManager.save(user);
+            return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null);
+        } catch (RuntimeException e) {
+            logger.error("Error while registering user with username {}", userRegistrationCommand.getEmail(), e);
+            throw e;
         }
-        User user = mapper.map(userRegistrationCommand, User.class);
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        user.setRole(userRole.name());
-        userManager.save(user);
-        return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null);
     }
 
 
@@ -88,16 +92,21 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserVo getUserVo() throws UsernameNotFoundException {
-        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.isNull(authenticationToken.getPrincipal())) {
-            throw new UsernameNotFoundException("User not found");
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            if (Objects.isNull(authenticationToken.getPrincipal())) {
+                throw new UsernameNotFoundException("User not found");
+            }
+            String userName = ((UserInfoDetails) authenticationToken.getPrincipal()).getUsername();
+            Optional<User> userOptional = userManager.findByUserName(userName);
+            if (userOptional.isEmpty()) {
+                throw new UsernameNotFoundException("User not found with username " + userName);
+            }
+            return mapper.map(userOptional.get(), UserVo.class);
+        } catch (Exception e) {
+            logger.error("Error while fetching user info", e);
+            throw e;
         }
-        String userName = ((UserInfoDetails) authenticationToken.getPrincipal()).getUsername();
-        Optional<User> userOptional = userManager.findByUserName(userName);
-        if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException("User not found with username " + userName);
-        }
-        return mapper.map(userOptional.get(), UserVo.class);
     }
 
 

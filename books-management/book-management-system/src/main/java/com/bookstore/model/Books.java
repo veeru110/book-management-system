@@ -21,9 +21,17 @@ public class Books {
     @Column(name = "available_stock")
     private Long availableStock;
 
-    @Column(name = "book_category")
-    private String bookCategory;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_rack_id", nullable = false)
+    private BookRack rack;
 
+    public BookRack getRack() {
+        return rack;
+    }
+
+    public void setRack(BookRack rack) {
+        this.rack = rack;
+    }
 
     public String getBookName() {
         return bookName;
@@ -57,14 +65,6 @@ public class Books {
         this.availableStock = availableStock;
     }
 
-    public String getBookCategory() {
-        return bookCategory;
-    }
-
-    public void setBookCategory(String bookCategory) {
-        this.bookCategory = bookCategory;
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Books{");
@@ -72,7 +72,7 @@ public class Books {
         sb.append(", edition=").append(edition);
         sb.append(", authorNames='").append(authorNames).append('\'');
         sb.append(", availableStock=").append(availableStock);
-        sb.append(", bookCategory='").append(bookCategory).append('\'');
+        sb.append(", rack=").append(rack);
         sb.append('}');
         return sb.toString();
     }

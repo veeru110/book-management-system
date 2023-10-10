@@ -4,5 +4,5 @@ import com.bookstore.vo.DashboardVo;
 
 public interface DashboardService {
 
-    DashboardVo getDashboardStats();
+    DashboardVo getDashboardStats() throws RuntimeException;
 }

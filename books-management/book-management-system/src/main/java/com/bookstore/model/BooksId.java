@@ -5,9 +5,9 @@ import java.util.Objects;
 
 public class BooksId implements Serializable {
 
-    private String bookName;
+    private final String bookName;
 
-    private Integer edition;
+    private final Integer edition;
 
     public BooksId(String bookName, Integer edition) {
         this.bookName = bookName;

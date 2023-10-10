@@ -1,7 +1,8 @@
 package com.bookstore.model;
 
-import com.bookstore.constants.UserRole;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -15,6 +16,9 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<BuyerMembershipInfo> buyerMemberships;
 
     @Column(name = "is_active")
     private Boolean isActive = true;
@@ -32,6 +36,9 @@ public class User {
     private String email;
     @Column(name = "role")
     private String role;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Address address;
 
 
     public String getRole() {

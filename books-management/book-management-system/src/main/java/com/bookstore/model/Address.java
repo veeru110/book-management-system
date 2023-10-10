@@ -24,8 +24,20 @@ public class Address {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "pincode")
-    private Integer pincode;
+    @Column(name = "pin_code")
+    private Integer pinCode;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_user_id", referencedColumnName = "user_id")
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Integer getAddressId() {
         return addressId;
@@ -67,12 +79,12 @@ public class Address {
         this.city = city;
     }
 
-    public Integer getPincode() {
-        return pincode;
+    public Integer getPinCode() {
+        return pinCode;
     }
 
-    public void setPincode(Integer pincode) {
-        this.pincode = pincode;
+    public void setPinCode(Integer pinCode) {
+        this.pinCode = pinCode;
     }
 
     @Override
@@ -83,7 +95,7 @@ public class Address {
         sb.append(", street='").append(street).append('\'');
         sb.append(", landmark='").append(landmark).append('\'');
         sb.append(", city='").append(city).append('\'');
-        sb.append(", pincode=").append(pincode);
+        sb.append(", pinCode=").append(pinCode);
         sb.append('}');
         return sb.toString();
     }

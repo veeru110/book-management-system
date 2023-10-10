@@ -1,6 +1,7 @@
 package com.bookstore.config;
 
 import com.bookstore.config.jwt.JWTAuthenticationFilter;
+import com.bookstore.constants.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,7 @@ public class BookStoreWebSecurityConfig {
 
     @Autowired
     public BookStoreWebSecurityConfig(JWTAuthenticationFilter authenticationFilter,
-                                     UserDetailsService userDetailsService) {
+                                      UserDetailsService userDetailsService) {
         this.authenticationFilter = authenticationFilter;
         this.userDetailsService = userDetailsService;
     }
@@ -37,19 +38,19 @@ public class BookStoreWebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.cors().and().csrf().disable().authorizeHttpRequests()
-                .requestMatchers("/dashboard", "/login", "/register").permitAll()
+                .requestMatchers(Constants.UNAUTHENTICATED_CONTEXT_PATHS).permitAll()
                 .anyRequest().authenticated().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);

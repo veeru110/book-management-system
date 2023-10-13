@@ -1,16 +1,30 @@
-//package com.bookstore.utils;
-//
-//
-//import org.springframework.stereotype.Component;
-//import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-//
-//import java.util.Map;
-//
-//@Component
-//public class TemplateMerger {
-//
-//    public String getContentUsingTemplate(Map<String, String> dataModel,String template) {
-//        //FreeMarkerTemplateUtils.processTemplateIntoString()
-//
-//    }
-//}
+package com.bookstore.utils;
+
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Map;
+
+@Component
+public class TemplateMerger {
+
+    private final Configuration configuration;
+
+    @Autowired
+    public TemplateMerger(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public String getContentUsingTemplate(Map<String, String> dataModel, String templateName) throws IOException, TemplateException {
+        Template template = configuration.getTemplate(templateName + ".ftl");
+        StringWriter writer = new StringWriter();
+        template.process(template,writer);
+        return writer.toString();
+    }
+}

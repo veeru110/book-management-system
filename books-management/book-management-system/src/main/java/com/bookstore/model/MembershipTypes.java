@@ -18,8 +18,8 @@ public class MembershipTypes {
     private String membershipPremiumLevel;
 
     @Id
-    @Column(name = "membership_duration", nullable = false)
-    private Integer membershipDuration;
+    @Column(name = "membership_duration_in_days", nullable = false)
+    private Integer membershipDurationInDays;
 
     @Column(name = "membership_price", nullable = false)
     private Double membershipPrice;
@@ -27,12 +27,12 @@ public class MembershipTypes {
     @Column(name = "discount_percentage")
     private Integer discountPercentage;
 
-    public Integer getMembershipDuration() {
-        return membershipDuration;
+    public Integer getMembershipDurationInDays() {
+        return membershipDurationInDays;
     }
 
-    public void setMembershipDuration(Integer membershipDuration) {
-        this.membershipDuration = membershipDuration;
+    public void setMembershipDurationInDays(Integer membershipDurationInDays) {
+        this.membershipDurationInDays = membershipDurationInDays;
     }
 
     public String getMembershipPremiumLevel() {
@@ -72,7 +72,7 @@ public class MembershipTypes {
         final StringBuilder sb = new StringBuilder("MembershipTypes{");
         sb.append("memberShipTypeId=").append(memberShipTypeId);
         sb.append(", membershipPremiumLevel='").append(membershipPremiumLevel).append('\'');
-        sb.append(", membershipDuration=").append(membershipDuration);
+        sb.append(", membershipDuration=").append(membershipDurationInDays);
         sb.append(", membershipPrice=").append(membershipPrice);
         sb.append(", discountPercentage=").append(discountPercentage);
         sb.append('}');

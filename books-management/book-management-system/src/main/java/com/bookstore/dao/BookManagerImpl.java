@@ -2,9 +2,11 @@ package com.bookstore.dao;
 
 import com.bookstore.model.Books;
 import com.bookstore.repository.BooksRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class BookManagerImpl implements IBookManager{
 
     private final BooksRepository booksRepository;

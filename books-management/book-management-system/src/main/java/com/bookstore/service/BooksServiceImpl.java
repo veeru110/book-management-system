@@ -10,7 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ public class BooksServiceImpl implements BooksService {
 
     private static final Logger logger = LogManager.getLogger(BooksServiceImpl.class);
 
-    private final ThreadPoolTaskExecutor booksTxnTaskExecutor;
     private final IBookManager bookManager;
 
     private static final Mapper mapper = new DozerBeanMapper();
@@ -40,8 +38,7 @@ public class BooksServiceImpl implements BooksService {
         return rackExplicitLocks.get(bookCategory);
     }
 
-    public BooksServiceImpl(ThreadPoolTaskExecutor booksTxnTaskExecutor, IBookManager bookManager) {
-        this.booksTxnTaskExecutor = booksTxnTaskExecutor;
+    public BooksServiceImpl(IBookManager bookManager) {
         this.bookManager = bookManager;
     }
 

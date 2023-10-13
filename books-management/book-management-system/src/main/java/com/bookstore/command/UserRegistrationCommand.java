@@ -13,8 +13,10 @@ public class UserRegistrationCommand {
     @NotEmpty(message = "Email cannot be empty")
     private String email;
 
+    @NotEmpty
     private String role;
 
+    @NotEmpty
     private String password;
 
     public String getRole() {

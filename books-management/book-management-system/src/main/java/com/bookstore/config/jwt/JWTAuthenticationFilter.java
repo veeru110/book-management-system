@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +28,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private final ThreadLocal<String> threadLocalAuthBearer = new ThreadLocal<>();
 
+    private static final Logger logger = LogManager.getLogger(JWTAuthenticationFilter.class);
+
     @Autowired
     public JWTAuthenticationFilter(JWTService jwtService, UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
@@ -41,6 +45,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        logger.info("Context path is {}", request.getServletPath());
         for (String contextPath : UNAUTHENTICATED_CONTEXT_PATHS) {
             if (StringUtils.contains(request.getServletPath(), contextPath)) {
                 filterChain.doFilter(request, response);

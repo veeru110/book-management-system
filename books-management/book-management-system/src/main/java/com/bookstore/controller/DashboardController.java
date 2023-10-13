@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-@RestController
+@RestController("/dashboard")
 public class DashboardController {
 
     private final DashboardService dashboardService;
@@ -17,7 +17,7 @@ public class DashboardController {
         this.dashboardService = dashboardService;
     }
 
-    @GetMapping("/dashboard")
+    @GetMapping
     public ResponseEntity<DashboardVo> stats() {
         DashboardVo dashboardVo = dashboardService.getDashboardStats();
         return new ResponseEntity<>(dashboardVo, HttpStatus.OK);

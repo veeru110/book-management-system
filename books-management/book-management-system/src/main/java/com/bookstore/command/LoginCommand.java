@@ -7,6 +7,7 @@ public class LoginCommand {
     @NotEmpty
     private String userName;
 
+    @NotEmpty
     private String password;
 
     public String getUserName() {

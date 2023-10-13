@@ -72,7 +72,7 @@ public class BuyerMembershipServiceImpl implements BuyerMembershipService {
             BuyerMembershipInfo buyerMembershipInfo = new BuyerMembershipInfo();
             buyerMembershipInfo.setUser(user);
             buyerMembershipInfo.setMembershipType(membershipTypes);
-            buyerMembershipInfo.setMembershipEndDate(DateUtils.addDays(buyerMembershipInfo.getMembershipStartDate(), membershipTypes.getMembershipDuration()));
+            buyerMembershipInfo.setMembershipEndDate(DateUtils.addDays(buyerMembershipInfo.getMembershipStartDate(), membershipTypes.getMembershipDurationInDays()));
             buyerMembershipInfo.setMembershipPrice(membershipTypes.getMembershipPrice());
             return mapper.map(buyerMembershipInfo, BuyerMembershipVo.class);
         } catch (Exception e) {

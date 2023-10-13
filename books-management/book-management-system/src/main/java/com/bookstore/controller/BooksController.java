@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController("books")
+@RestController("/books")
 public class BooksController {
 
     private final BooksService booksService;

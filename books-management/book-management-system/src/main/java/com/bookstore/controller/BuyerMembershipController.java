@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController("buyerMemberships")
+@RestController("/buyerMemberships")
 @PreAuthorize("hasRole('BUYER','ADMIN')")
 public class BuyerMembershipController {
 

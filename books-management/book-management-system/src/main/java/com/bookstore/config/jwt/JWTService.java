@@ -1,7 +1,7 @@
 package com.bookstore.config.jwt;
 
 import com.bookstore.dao.ICredentialManager;
-import com.bookstore.model.ServerPrivateKeys;
+import com.bookstore.model.BookStorePrivateKeys;
 import com.bookstore.utils.UserInfoDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
@@ -38,7 +38,7 @@ public class JWTService {
 
     @PostConstruct
     public void initJWTService() {
-        Optional<ServerPrivateKeys> serverPrivateKeys = credentialManager.getLatestPrivateKey();
+        Optional<BookStorePrivateKeys> serverPrivateKeys = credentialManager.getLatestPrivateKey();
         if (serverPrivateKeys.isEmpty()) {
             throw new RuntimeException("Server is not configured with private keys");
         }

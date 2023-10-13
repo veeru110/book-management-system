@@ -1,5 +1,6 @@
 package com.bookstore.model;
 
+import com.bookstore.constants.UserRole;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user")
-    private List<BuyerMembershipInfo> buyerMemberships;
+    private List<BuyerMembershipHistory> buyerMemberships;
 
     @Column(name = "is_active")
     private Boolean isActive = true;
@@ -35,20 +36,51 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
     @Column(name = "role")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Address address;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "user_book_rack_table", joinColumns = {
+            @JoinColumn(name = "pk_user_id", referencedColumnName = "user_id")
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "pk_book_rack_id",referencedColumnName = "book_rack_id")
+    })
+    private List<BookRack> genresInterested;
 
-    public String getRole() {
+    public List<BookRack> getGenresInterested() {
+        return genresInterested;
+    }
+
+    public void setGenresInterested(List<BookRack> genresInterested) {
+        this.genresInterested = genresInterested;
+    }
+
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
+    public List<BuyerMembershipHistory> getBuyerMemberships() {
+        return buyerMemberships;
+    }
+
+    public void setBuyerMemberships(List<BuyerMembershipHistory> buyerMemberships) {
+        this.buyerMemberships = buyerMemberships;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public Integer getUserId() {
         return userId;

@@ -9,17 +9,33 @@ import java.util.List;
 public class BookRack {
 
     @Id
-    @Column(name = "rack_name", nullable = false)
-    private String rackName;
+    @SequenceGenerator(name = "book_rack_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "book_rack_seq")
+    @Column(name = "book_rack_id")
+    private Integer bookRackId;
 
-    @OneToMany(mappedBy = "rack")
-    private List<Books> books;
+    @Column(name = "rack_name", nullable = false,unique = true)
+    private String rackName; //genre
 
-    public List<Books> getBooks() {
+    @OneToMany(mappedBy = "rack", fetch = FetchType.LAZY)
+    private List<Book> books;
+
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
+
+    public Integer getBookRackId() {
+        return bookRackId;
+    }
+
+    public void setBookRackId(Integer bookRackId) {
+        this.bookRackId = bookRackId;
+    }
+
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(List<Books> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
     }
 
@@ -32,11 +48,20 @@ public class BookRack {
         this.rackName = rackName;
     }
 
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("BookRack{");
         sb.append("rackName='").append(rackName).append('\'');
         sb.append(", books=").append(books);
+        sb.append(", isDeleted=").append(isDeleted);
         sb.append('}');
         return sb.toString();
     }

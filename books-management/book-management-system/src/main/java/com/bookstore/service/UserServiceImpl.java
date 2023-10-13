@@ -54,8 +54,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserRegistrationResponseVo registerUser(UserRegistrationCommand userRegistrationCommand, String privateKey) throws RuntimeException {
         try {
-            UserRole userRole = UserRole.valueOf(userRegistrationCommand.getRole());
-            if (Objects.equals(userRole, UserRole.ADMIN)) {
+            if (Objects.equals(userRegistrationCommand.getRole(), UserRole.ADMIN)) {
                 if (!StringUtils.equals(new String(JWTService.getPrivateKey().getEncoded()), privateKey)) {
                     throw new AuthenticationServiceException("Not allowed");
                 }
@@ -63,7 +62,7 @@ public class UserServiceImpl implements IUserService {
             User user = mapper.map(userRegistrationCommand, User.class);
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
-            user.setRole(userRole.name());
+            user.setRole(userRegistrationCommand.getRole());
             userManager.save(user);
             return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null);
         } catch (RuntimeException e) {

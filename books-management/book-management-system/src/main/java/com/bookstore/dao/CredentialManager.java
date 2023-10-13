@@ -1,7 +1,7 @@
 package com.bookstore.dao;
 
-import com.bookstore.model.ServerPrivateKeys;
-import com.bookstore.repository.ServerPrivateKeyRepository;
+import com.bookstore.model.BookStorePrivateKeys;
+import com.bookstore.repository.BookStorePrivateKeyRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -9,14 +9,14 @@ import java.util.Optional;
 @Component
 public class CredentialManager implements ICredentialManager {
 
-    private final ServerPrivateKeyRepository serverPrivateKeyRepository;
+    private final BookStorePrivateKeyRepository bookStorePrivateKeyRepository;
 
-    public CredentialManager(ServerPrivateKeyRepository serverPrivateKeyRepository) {
-        this.serverPrivateKeyRepository = serverPrivateKeyRepository;
+    public CredentialManager(BookStorePrivateKeyRepository bookStorePrivateKeyRepository) {
+        this.bookStorePrivateKeyRepository = bookStorePrivateKeyRepository;
     }
 
     @Override
-    public Optional<ServerPrivateKeys> getLatestPrivateKey() {
-        return serverPrivateKeyRepository.getServerPrivateKey();
+    public Optional<BookStorePrivateKeys> getLatestPrivateKey() {
+        return bookStorePrivateKeyRepository.getServerPrivateKey();
     }
 }

@@ -6,8 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "server_private_keys_config")
-public class ServerPrivateKeys {
+@Table(name = "book_store_private_keys_config")
+public class BookStorePrivateKeys {
 
     @Id
     @Column(name = "private_key_id")

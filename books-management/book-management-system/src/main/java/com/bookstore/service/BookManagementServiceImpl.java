@@ -4,7 +4,7 @@ import com.bookstore.command.BookSaleCommand;
 import com.bookstore.command.BooksCommand;
 import com.bookstore.dao.IBookManager;
 import com.bookstore.model.BookRack;
-import com.bookstore.model.Books;
+import com.bookstore.model.Book;
 import com.bookstore.vo.ErrorVo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,9 +21,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Service
-public class BooksServiceImpl implements BooksService {
+public class BookManagementServiceImpl implements BookManagementService {
 
-    private static final Logger logger = LogManager.getLogger(BooksServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(BookManagementServiceImpl.class);
 
     private final IBookManager bookManager;
 
@@ -38,7 +38,7 @@ public class BooksServiceImpl implements BooksService {
         return rackExplicitLocks.get(bookCategory);
     }
 
-    public BooksServiceImpl(IBookManager bookManager) {
+    public BookManagementServiceImpl(IBookManager bookManager) {
         this.bookManager = bookManager;
     }
 
@@ -50,22 +50,22 @@ public class BooksServiceImpl implements BooksService {
     public List<ErrorVo> addBooksStock(List<BooksCommand> booksCommands) throws RuntimeException {
         List<ErrorVo> errorVos = new ArrayList<>();
         for (BooksCommand booksCommand : booksCommands) {
-            String rack = booksCommand.getBookCategory();
+            String rack = booksCommand.getGenre();
             ReentrantLock rackExplicitLock = getExplicitLockForRack(rack);
             logger.info("Got Explicit Lock Object for rack {}, Is Locked {}, Waiting threads {}", rack, rackExplicitLock.isLocked(), rackExplicitLock.getQueueLength());
             try {
                 if (rackExplicitLock.tryLock(30, TimeUnit.SECONDS)) {
-                    Books books = bookManager.getBookByNameAndEdition(booksCommand.getBookName(), booksCommand.getEdition());
-                    if (Objects.isNull(books)) {
+                    Book book = bookManager.getBookByNameAndEdition(booksCommand.getBookName(), booksCommand.getEdition());
+                    if (Objects.isNull(book)) {
                         BookRack bookRack = new BookRack();
                         bookRack.setRackName(rack);
 
-                        books = mapper.map(booksCommand, Books.class);
-                        books.setRack(bookRack);
-                        books.setAvailableStock(0l);
+                        book = mapper.map(booksCommand, Book.class);
+                        book.setRack(bookRack);
+                        book.setAvailableStock(0l);
                     }
-                    books.setAvailableStock(books.getAvailableStock() + booksCommand.getStockInward());
-                    bookManager.save(books);
+                    book.setAvailableStock(book.getAvailableStock() + booksCommand.getStockInward());
+                    bookManager.save(book);
                 }
             } catch (Exception e) {
                 logger.error("Error while acquiring lock for rack " + rack);
@@ -82,22 +82,22 @@ public class BooksServiceImpl implements BooksService {
     public List<ErrorVo> saleBooks(List<BookSaleCommand> bookSaleCommands) {
         List<ErrorVo> errorVos = new ArrayList<>();
         for (BookSaleCommand bookSaleCommand : bookSaleCommands) {
-            Books books = bookManager.getBookByNameAndEdition(bookSaleCommand.getBookName(), bookSaleCommand.getEdition());
-            if (Objects.isNull(books)) {
+            Book book = bookManager.getBookByNameAndEdition(bookSaleCommand.getBookName(), bookSaleCommand.getEdition());
+            if (Objects.isNull(book)) {
                 errorVos.add(new ErrorVo("No Books found with " + bookSaleCommand.getBookName() + " and edition " + bookSaleCommand.getEdition(), "Not found"));
                 continue;
             }
-            String rack = books.getRack().getRackName();
+            String rack = book.getRack().getRackName();
             ReentrantLock rackExplicitLock = getExplicitLockForRack(rack);
             logger.info("Got Explicit Lock Object for rack {}, Is Locked {}, Waiting threads {}", rack, rackExplicitLock.isLocked(), rackExplicitLock.getQueueLength());
             try {
                 if (rackExplicitLock.tryLock(30, TimeUnit.SECONDS)) {
-                    if (books.getAvailableStock() < bookSaleCommand.getCountRequired()) {
-                        errorVos.add(new ErrorVo("Less stock while Book sale for " + bookSaleCommand.getBookName() + " avaialble " + books.getAvailableStock() + " required " + bookSaleCommand.getCountRequired(), ""));
+                    if (book.getAvailableStock() < bookSaleCommand.getCountRequired()) {
+                        errorVos.add(new ErrorVo("Less stock while Book sale for " + bookSaleCommand.getBookName() + " avaialble " + book.getAvailableStock() + " required " + bookSaleCommand.getCountRequired(), ""));
                         continue;
                     }
-                    books.setAvailableStock(books.getAvailableStock() - bookSaleCommand.getCountRequired());
-                    bookManager.save(books);
+                    book.setAvailableStock(book.getAvailableStock() - bookSaleCommand.getCountRequired());
+                    bookManager.save(book);
                 }
             } catch (InterruptedException e) {
                 logger.error("Error while acquiring lock for rack " + rack);

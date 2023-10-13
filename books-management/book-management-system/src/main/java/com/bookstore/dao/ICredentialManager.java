@@ -1,10 +1,10 @@
 package com.bookstore.dao;
 
-import com.bookstore.model.ServerPrivateKeys;
+import com.bookstore.model.BookStorePrivateKeys;
 
 import java.util.Optional;
 
 public interface ICredentialManager {
 
-    Optional<ServerPrivateKeys> getLatestPrivateKey();
+    Optional<BookStorePrivateKeys> getLatestPrivateKey();
 }

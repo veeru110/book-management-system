@@ -3,9 +3,9 @@ package com.bookstore.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "books")
-@IdClass(BooksId.class)
-public class Books {
+@Table(name = "book")
+@IdClass(BookId.class)
+public class Book {
 
     @Id
     @Column(name = "book_name")

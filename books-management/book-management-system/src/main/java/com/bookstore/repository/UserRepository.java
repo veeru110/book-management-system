@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmailAndIsDeletedFalseAndIsActiveTrue(String email);
 
-    @Query(value = "select count(userId) from User where role!='ADMIN' and isActive=true and isDeleted=false")
+    @Query(value = "select count(userId) from User where role!=com.bookstore.constants.UserRole.ADMIN and isActive=true and isDeleted=false")
     Integer countAllUsers();
 
 }

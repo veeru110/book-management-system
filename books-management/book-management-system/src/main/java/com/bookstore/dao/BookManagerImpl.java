@@ -1,7 +1,7 @@
 package com.bookstore.dao;
 
-import com.bookstore.model.Books;
-import com.bookstore.repository.BooksRepository;
+import com.bookstore.model.Book;
+import com.bookstore.repository.BookRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,24 +9,24 @@ import java.util.List;
 @Component
 public class BookManagerImpl implements IBookManager{
 
-    private final BooksRepository booksRepository;
+    private final BookRepository bookRepository;
 
-    public BookManagerImpl(BooksRepository booksRepository) {
-        this.booksRepository = booksRepository;
+    public BookManagerImpl(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     @Override
-    public void save(Books book) {
-        booksRepository.save(book);
+    public void save(Book book) {
+        bookRepository.save(book);
     }
 
     @Override
-    public List<Books> getAllBooksByCategory(String category) {
-        return booksRepository.findAllByRack(category);
+    public List<Book> getAllBooksByCategory(String category) {
+        return bookRepository.findAllByRack(category);
     }
 
     @Override
-    public Books getBookByNameAndEdition(String bookName, Integer edition) {
-        return booksRepository.findByBookNameAndEdition(bookName,edition);
+    public Book getBookByNameAndEdition(String bookName, Integer edition) {
+        return bookRepository.findByBookNameAndEdition(bookName,edition);
     }
 }

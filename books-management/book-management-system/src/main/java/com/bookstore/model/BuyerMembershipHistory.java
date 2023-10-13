@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "buyer_membership_info")
-public class BuyerMembershipInfo {
+@Table(name = "buyer_membership_history")
+public class BuyerMembershipHistory {
 
     @Id
     @Column(name = "buyer_membership_id")

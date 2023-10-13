@@ -1,7 +1,11 @@
 package com.bookstore.command;
 
+import com.bookstore.constants.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 
 public class UserRegistrationCommand {
@@ -13,17 +17,27 @@ public class UserRegistrationCommand {
     @NotEmpty(message = "Email cannot be empty")
     private String email;
 
-    @NotEmpty
-    private String role;
+    @NotEmpty(message = "User Role is must")
+    private UserRole role;
 
-    @NotEmpty
+    @NotEmpty(message = "Password can't be empty")
     private String password;
 
-    public String getRole() {
+    private List<String> genresInterested;
+
+    public List<String> getGenresInterested() {
+        return genresInterested;
+    }
+
+    public void setGenresInterested(List<String> genresInterested) {
+        this.genresInterested = genresInterested;
+    }
+
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 

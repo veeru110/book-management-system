@@ -1,6 +1,6 @@
 package com.bookstore.dao;
 
-import com.bookstore.model.BuyerMembershipInfo;
+import com.bookstore.model.BuyerMembershipHistory;
 import com.bookstore.repository.BuyerMembershipInfoRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class BuyerMembershipManagerImpl implements IBuyerMembershipManager {
     }
 
     @Override
-    public List<BuyerMembershipInfo> getAllBuyerMembershipInfos(String username) {
+    public List<BuyerMembershipHistory> getAllBuyerMembershipInfos(String username) {
         if (StringUtils.isEmpty(username)) {
             return buyerMembershipInfoRepository.findAll();
         }
@@ -27,7 +27,7 @@ public class BuyerMembershipManagerImpl implements IBuyerMembershipManager {
     }
 
     @Override
-    public void save(BuyerMembershipInfo buyerMembershipInfo) {
-        buyerMembershipInfoRepository.save(buyerMembershipInfo);
+    public void save(BuyerMembershipHistory buyerMembershipHistory) {
+        buyerMembershipInfoRepository.save(buyerMembershipHistory);
     }
 }

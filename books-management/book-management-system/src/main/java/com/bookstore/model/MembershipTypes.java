@@ -27,6 +27,17 @@ public class MembershipTypes {
     @Column(name = "discount_percentage")
     private Integer discountPercentage;
 
+    @Column(name = "enable_promotional_notifications")
+    private Boolean enablePromotionalNotifications = false;
+
+    public Boolean getEnablePromotionalNotifications() {
+        return enablePromotionalNotifications;
+    }
+
+    public void setEnablePromotionalNotifications(Boolean enablePromotionalNotifications) {
+        this.enablePromotionalNotifications = enablePromotionalNotifications;
+    }
+
     public Integer getMembershipDurationInDays() {
         return membershipDurationInDays;
     }

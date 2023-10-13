@@ -21,7 +21,7 @@ public class UserInfoDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return UserRole.valueOf(user.getRole()).getAuthorities();
+        return user.getRole().getAuthorities();
     }
 
     @Override

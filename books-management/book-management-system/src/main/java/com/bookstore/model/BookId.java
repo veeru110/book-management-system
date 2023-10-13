@@ -3,13 +3,13 @@ package com.bookstore.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class BooksId implements Serializable {
+public class BookId implements Serializable {
 
     private final String bookName;
 
     private final Integer edition;
 
-    public BooksId(String bookName, Integer edition) {
+    public BookId(String bookName, Integer edition) {
         this.bookName = bookName;
         this.edition = edition;
     }
@@ -18,8 +18,8 @@ public class BooksId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BooksId booksId = (BooksId) o;
-        return bookName.equals(booksId.bookName) && edition.equals(booksId.edition);
+        BookId bookId = (BookId) o;
+        return bookName.equals(bookId.bookName) && edition.equals(bookId.edition);
     }
 
     @Override

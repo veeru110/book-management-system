@@ -5,7 +5,7 @@ import com.bookstore.constants.UserRole;
 import com.bookstore.dao.IBuyerMembershipManager;
 import com.bookstore.dao.IMembershipManager;
 import com.bookstore.exception.MembershipNotFoundException;
-import com.bookstore.model.BuyerMembershipInfo;
+import com.bookstore.model.BuyerMembershipHistory;
 import com.bookstore.model.MembershipTypes;
 import com.bookstore.model.User;
 import com.bookstore.utils.UserUtils;
@@ -50,8 +50,8 @@ public class BuyerMembershipServiceImpl implements BuyerMembershipService {
             if (!user.getRole().equals(UserRole.ADMIN.toString())) {
                 username = user.getEmail();
             }
-            List<BuyerMembershipInfo> buyerMembershipInfo = buyerMembershipManager.getAllBuyerMembershipInfos(username);
-            return buyerMembershipInfo.stream().map(b -> mapper.map(b, BuyerMembershipVo.class)).collect(Collectors.toList());
+            List<BuyerMembershipHistory> buyerMembershipHistory = buyerMembershipManager.getAllBuyerMembershipInfos(username);
+            return buyerMembershipHistory.stream().map(b -> mapper.map(b, BuyerMembershipVo.class)).collect(Collectors.toList());
         } catch (Exception e) {
             logger.error("Error while fetching buyer memberships", e);
             throw e;
@@ -69,12 +69,12 @@ public class BuyerMembershipServiceImpl implements BuyerMembershipService {
             if (Objects.isNull(membershipTypes)) {
                 throw new MembershipNotFoundException("Membership not found for premium " + buyerMembershipCommand.getMembershipPremiumLevel() + " and duration " + buyerMembershipCommand.getMembershipDurationInDays());
             }
-            BuyerMembershipInfo buyerMembershipInfo = new BuyerMembershipInfo();
-            buyerMembershipInfo.setUser(user);
-            buyerMembershipInfo.setMembershipType(membershipTypes);
-            buyerMembershipInfo.setMembershipEndDate(DateUtils.addDays(buyerMembershipInfo.getMembershipStartDate(), membershipTypes.getMembershipDurationInDays()));
-            buyerMembershipInfo.setMembershipPrice(membershipTypes.getMembershipPrice());
-            return mapper.map(buyerMembershipInfo, BuyerMembershipVo.class);
+            BuyerMembershipHistory buyerMembershipHistory = new BuyerMembershipHistory();
+            buyerMembershipHistory.setUser(user);
+            buyerMembershipHistory.setMembershipType(membershipTypes);
+            buyerMembershipHistory.setMembershipEndDate(DateUtils.addDays(buyerMembershipHistory.getMembershipStartDate(), membershipTypes.getMembershipDurationInDays()));
+            buyerMembershipHistory.setMembershipPrice(membershipTypes.getMembershipPrice());
+            return mapper.map(buyerMembershipHistory, BuyerMembershipVo.class);
         } catch (Exception e) {
             logger.error("Error while buying membership", e);
             throw e;

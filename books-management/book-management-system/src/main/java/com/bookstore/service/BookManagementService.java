@@ -6,7 +6,7 @@ import com.bookstore.vo.ErrorVo;
 
 import java.util.List;
 
-public interface BooksService {
+public interface BookManagementService {
     List<ErrorVo> addBooksStock(List<BooksCommand> booksCommands) throws RuntimeException;
 
     List<ErrorVo> saleBooks(List<BookSaleCommand> bookSaleCommands);

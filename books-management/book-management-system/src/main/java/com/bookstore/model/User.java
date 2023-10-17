@@ -42,21 +42,21 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Address address;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "user_book_rack_table", joinColumns = {
-            @JoinColumn(name = "pk_user_id", referencedColumnName = "user_id")
-    }, inverseJoinColumns = {
-            @JoinColumn(name = "pk_book_rack_id",referencedColumnName = "book_rack_id")
-    })
-    private List<BookRack> genresInterested;
-
-    public List<BookRack> getGenresInterested() {
-        return genresInterested;
-    }
-
-    public void setGenresInterested(List<BookRack> genresInterested) {
-        this.genresInterested = genresInterested;
-    }
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "user_book_rack_table", joinColumns = {
+//            @JoinColumn(name = "pk_user_id", referencedColumnName = "user_id")
+//    }, inverseJoinColumns = {
+//            @JoinColumn(name = "pk_book_rack_id", referencedColumnName = "book_rack_id")
+//    })
+//    private List<BookRack> genresInterested;
+//
+//    public List<BookRack> getGenresInterested() {
+//        return genresInterested;
+//    }
+//
+//    public void setGenresInterested(List<BookRack> genresInterested) {
+//        this.genresInterested = genresInterested;
+//    }
 
     public UserRole getRole() {
         return role;

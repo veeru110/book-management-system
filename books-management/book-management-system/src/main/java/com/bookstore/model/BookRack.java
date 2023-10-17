@@ -23,6 +23,13 @@ public class BookRack {
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
 
+    public BookRack(String rackName) {
+        this.rackName = rackName;
+    }
+
+    public BookRack() {
+    }
+
     public Integer getBookRackId() {
         return bookRackId;
     }

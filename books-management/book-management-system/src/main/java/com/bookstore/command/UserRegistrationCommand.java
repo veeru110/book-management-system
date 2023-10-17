@@ -17,7 +17,7 @@ public class UserRegistrationCommand {
     @NotEmpty(message = "Email cannot be empty")
     private String email;
 
-    @NotEmpty(message = "User Role is must")
+    @NotNull(message = "User Role is must")
     private UserRole role;
 
     @NotEmpty(message = "Password can't be empty")

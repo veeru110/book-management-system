@@ -4,7 +4,9 @@ import com.bookstore.command.LoginCommand;
 import com.bookstore.command.UserRegistrationCommand;
 import com.bookstore.config.jwt.JWTService;
 import com.bookstore.constants.UserRole;
+import com.bookstore.dao.IBookRackManager;
 import com.bookstore.dao.IUserManager;
+import com.bookstore.model.BookRack;
 import com.bookstore.model.User;
 import com.bookstore.utils.UserInfoDetails;
 import com.bookstore.vo.LoginResponseVo;
@@ -25,8 +27,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -39,16 +43,18 @@ public class UserServiceImpl implements IUserService {
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final IUserManager userManager;
+    private final BookRackManagementService bookRackManagementService;
 
     private static final Mapper mapper = new DozerBeanMapper();
 
     public UserServiceImpl(UserDetailsService userDetailsService, AuthenticationManager authenticationManager,
-                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager) {
+                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager,BookRackManagementService bookRackManagementService) {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.userManager = userManager;
+        this.bookRackManagementService = bookRackManagementService;
     }
 
     @Override
@@ -63,6 +69,9 @@ public class UserServiceImpl implements IUserService {
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
             user.setRole(userRegistrationCommand.getRole());
+            List<BookRack> genresInterested = userRegistrationCommand.getGenresInterested().stream().map(BookRack::new).collect(Collectors.toList());
+            bookRackManagementService.saveNewRacks(userRegistrationCommand.getGenresInterested());
+            //user.setGenresInterested(genresInterested);
             userManager.save(user);
             return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null);
         } catch (RuntimeException e) {

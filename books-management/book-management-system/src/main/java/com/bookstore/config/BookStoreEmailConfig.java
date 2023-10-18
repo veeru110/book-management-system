@@ -1,7 +1,6 @@
 package com.bookstore.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,16 +11,16 @@ import java.util.Properties;
 @Configuration
 public class BookStoreEmailConfig {
 
-    @Value("${self.email.server.host}")
+    @Value("${email.server.host}")
     private String emailServer;
 
-    @Value("${self.email.username}")
+    @Value("${email.username}")
     private String username;
 
-    @Value("${self.email.password}")
+    @Value("${email.password}")
     private String password;
 
-    @Value("${self.email.server.port}")
+    @Value("${email.server.port}")
     private Integer port;
 
     private Properties getEmailProperties() {
@@ -35,8 +34,7 @@ public class BookStoreEmailConfig {
 
 
     @Bean
-    @ConditionalOnProperty(value = "bookstore.email.service", havingValue = "self")
-    public JavaMailSender bookStoreSelfMailSender() {
+    public JavaMailSender bookStoreMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setHost(emailServer);
         javaMailSender.setUsername(username);

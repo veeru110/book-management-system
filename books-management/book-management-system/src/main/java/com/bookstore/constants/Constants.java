@@ -6,6 +6,6 @@ public interface Constants {
     String AUTHORIZATION = "Authorization";
 
     String BEARER = "Bearer";
-    String[] UNAUTHENTICATED_CONTEXT_PATHS = new String[]{"/login", "/register", "/dashboard"};
+    String[] UNAUTHENTICATED_CONTEXT_PATHS = new String[]{"/users/login", "/users/register", "/dashboard"};
 }
 

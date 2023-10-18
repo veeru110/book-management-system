@@ -39,33 +39,37 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader(AUTHORIZATION);
-        if (!StringUtils.startsWith(authHeader, BEARER)) {
-            //send to Dispatcher servlet
-            filterChain.doFilter(request, response);
-            return;
-        }
-        logger.info("Context path is {}", request.getServletPath());
-        for (String contextPath : UNAUTHENTICATED_CONTEXT_PATHS) {
-            if (StringUtils.contains(request.getServletPath(), contextPath)) {
+        try {
+            logger.info("Context path is {}", request.getServletPath());
+            for (String contextPath : UNAUTHENTICATED_CONTEXT_PATHS) {
+                if (StringUtils.contains(request.getServletPath(), contextPath)) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+            }
+            String authHeader = request.getHeader(AUTHORIZATION);
+            if (!StringUtils.startsWith(authHeader, BEARER)) {
+                //send to Dispatcher servlet
                 filterChain.doFilter(request, response);
                 return;
             }
-        }
-        String jwtToken = authHeader.substring(7);
-        String userName = jwtService.getUserNameFromJWTToken(jwtToken);
-        //check if user is not authenticated yet
-        if (!StringUtils.isEmpty(userName) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-            if (jwtService.isValidToken(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            String jwtToken = authHeader.substring(7);
+            String userName = jwtService.getUserNameFromJWTToken(jwtToken);
+            //check if user is not authenticated yet
+            if (!StringUtils.isEmpty(userName) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+                if (jwtService.isValidToken(jwtToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
+                            null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
+            threadLocalAuthBearer.set(authHeader);
+            //send to Dispatcher servlet
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            logger.error("Error while forwarding request filter chain", e);
         }
-        threadLocalAuthBearer.set(authHeader);
-        //send to Dispatcher servlet
-        filterChain.doFilter(request, response);
     }
 }

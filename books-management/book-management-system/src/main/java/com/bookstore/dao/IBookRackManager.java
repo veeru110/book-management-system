@@ -3,6 +3,7 @@ package com.bookstore.dao;
 import com.bookstore.model.BookRack;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IBookRackManager {
 
@@ -10,5 +11,7 @@ public interface IBookRackManager {
 
     void save(BookRack bookRack);
 
-    List<String> getAllGenres();
+    Set<String> getAllGenres();
+
+    Set<BookRack> getAllBookRacks();
 }

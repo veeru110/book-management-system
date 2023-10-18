@@ -9,9 +9,9 @@ import com.bookstore.vo.UserVo;
 
 public interface IUserService {
 
-    UserRegistrationResponseVo registerUser(UserRegistrationCommand userRegistrationCommand, String privateKey) throws RuntimeException;
+    UserRegistrationResponseVo registerUser(UserRegistrationCommand userRegistrationCommand, String privateKey) throws Exception;
 
-    LoginResponseVo login(LoginCommand loginCommand) throws RuntimeException;
+    LoginResponseVo login(LoginCommand loginCommand) throws Exception;
 
     UserVo getUserVo() throws RuntimeException;
 

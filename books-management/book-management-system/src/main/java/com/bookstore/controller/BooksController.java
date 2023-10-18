@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/books")
@@ -63,8 +64,8 @@ public class BooksController {
 
     @PreAuthorize("hasRole('BUYER','ADMIN','SELLER')")
     @PostMapping("/allAvailableGenres")
-    public ResponseEntity<List<String>> getAllGenres() {
-        List<String> allGenres = bookRackManagementService.getAllGenres();
+    public ResponseEntity<Set<String>> getAllGenres() {
+        Set<String> allGenres = bookRackManagementService.getAllGenres();
         return new ResponseEntity<>(allGenres, HttpStatus.OK);
     }
 

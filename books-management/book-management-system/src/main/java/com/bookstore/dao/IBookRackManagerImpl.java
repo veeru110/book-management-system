@@ -5,7 +5,9 @@ import com.bookstore.repository.BookRackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class IBookRackManagerImpl implements IBookRackManager{
@@ -28,7 +30,12 @@ public class IBookRackManagerImpl implements IBookRackManager{
     }
 
     @Override
-    public List<String> getAllGenres() {
+    public Set<String> getAllGenres() {
         return bookRackRepository.getAllGenres();
+    }
+
+    @Override
+    public Set<BookRack> getAllBookRacks() {
+        return new HashSet<>(bookRackRepository.findAll());
     }
 }

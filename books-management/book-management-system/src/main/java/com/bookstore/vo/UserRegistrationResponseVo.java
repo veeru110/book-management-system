@@ -1,6 +1,5 @@
 package com.bookstore.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
@@ -15,11 +14,14 @@ public class UserRegistrationResponseVo {
 
     private String failureMessage;
 
-    public UserRegistrationResponseVo(String userName, LocalDateTime registeredOn, boolean isRegistrationSuccessful, String failureMessage) {
+    private String messageToUser;
+
+    public UserRegistrationResponseVo(String userName, LocalDateTime registeredOn, boolean isRegistrationSuccessful, String failureMessage,String messageToUser) {
         this.userName = userName;
         this.registeredOn = registeredOn;
         this.isRegistrationSuccessful = isRegistrationSuccessful;
         this.failureMessage = failureMessage;
+        this.messageToUser = messageToUser;
     }
 
     public String getFailureMessage() {
@@ -52,5 +54,13 @@ public class UserRegistrationResponseVo {
 
     public void setRegisteredOn(LocalDateTime registeredOn) {
         this.registeredOn = registeredOn;
+    }
+
+    public String getMessageToUser() {
+        return messageToUser;
+    }
+
+    public void setMessageToUser(String messageToUser) {
+        this.messageToUser = messageToUser;
     }
 }

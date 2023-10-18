@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface BookRackRepository extends JpaRepository<BookRack,Integer> {
@@ -13,5 +14,5 @@ public interface BookRackRepository extends JpaRepository<BookRack,Integer> {
     BookRack findByRackName(String rackName);
 
     @Query("select rackName from BookRack where isDeleted=false")
-    List<String> getAllGenres();
+    Set<String> getAllGenres();
 }

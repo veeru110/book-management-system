@@ -25,12 +25,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.bookstore.constants.Constants.USER_MESSAGE_GENRES_NOT_PRESENT;
 
 
 @Service
@@ -43,12 +46,13 @@ public class UserServiceImpl implements IUserService {
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final IUserManager userManager;
+
     private final BookRackManagementService bookRackManagementService;
 
     private static final Mapper mapper = new DozerBeanMapper();
 
     public UserServiceImpl(UserDetailsService userDetailsService, AuthenticationManager authenticationManager,
-                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager,BookRackManagementService bookRackManagementService) {
+                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager, BookRackManagementService bookRackManagementService) {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
@@ -58,7 +62,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserRegistrationResponseVo registerUser(UserRegistrationCommand userRegistrationCommand, String privateKey) throws RuntimeException {
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_UNCOMMITTED)
+    public UserRegistrationResponseVo registerUser(UserRegistrationCommand userRegistrationCommand, String privateKey) throws Exception {
         try {
             if (Objects.equals(userRegistrationCommand.getRole(), UserRole.ADMIN)) {
                 if (!StringUtils.equals(new String(JWTService.getPrivateKey().getEncoded()), privateKey)) {
@@ -69,15 +74,28 @@ public class UserServiceImpl implements IUserService {
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
             user.setRole(userRegistrationCommand.getRole());
-            List<BookRack> genresInterested = userRegistrationCommand.getGenresInterested().stream().map(BookRack::new).collect(Collectors.toList());
-            bookRackManagementService.saveNewRacks(userRegistrationCommand.getGenresInterested());
-            //user.setGenresInterested(genresInterested);
             userManager.save(user);
-            return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null);
-        } catch (RuntimeException e) {
+            return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null, null);
+        } catch (Exception e) {
             logger.error("Error while registering user with username {}", userRegistrationCommand.getEmail(), e);
             throw e;
         }
+    }
+
+    private String addUserInterestedGenresAndReturnMessageToUser(Set<String> genresInterested) {
+        Set<BookRack> allBookRacks = bookRackManagementService.getAllBookRacks();
+        Map<String, BookRack> allBookRacksMap = allBookRacks.stream().collect(Collectors.toMap(BookRack::getRackName, a -> a));
+        Set<BookRack> userInterestedBookRacks = new HashSet<>();
+        for (String genreInterested : genresInterested) {
+            if (allBookRacks.contains(genreInterested)) {
+                //userInterestedBookRacks.add()
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(genresInterested)) {
+            return USER_MESSAGE_GENRES_NOT_PRESENT.formatted(String.join(",", genresInterested));
+        }
+        return null;
     }
 
 

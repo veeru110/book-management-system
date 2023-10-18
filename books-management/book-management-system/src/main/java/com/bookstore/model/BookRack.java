@@ -3,6 +3,7 @@ package com.bookstore.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "book_rack")
@@ -71,5 +72,18 @@ public class BookRack {
         sb.append(", isDeleted=").append(isDeleted);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookRack bookRack = (BookRack) o;
+        return rackName.equals(bookRack.rackName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rackName);
     }
 }

@@ -47,6 +47,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                     return;
                 }
             }
+
             String authHeader = request.getHeader(AUTHORIZATION);
             if (!StringUtils.startsWith(authHeader, BEARER)) {
                 //send to Dispatcher servlet
@@ -70,6 +71,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             logger.error("Error while forwarding request filter chain", e);
+            throw e;
         }
     }
 }

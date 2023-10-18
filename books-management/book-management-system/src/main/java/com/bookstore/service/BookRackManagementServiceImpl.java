@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class BookRackManagementServiceImpl implements BookRackManagementService {
@@ -39,7 +40,12 @@ public class BookRackManagementServiceImpl implements BookRackManagementService 
     }
 
     @Override
-    public List<String> getAllGenres() {
+    public Set<String> getAllGenres() {
         return bookRackManager.getAllGenres();
+    }
+
+    @Override
+    public Set<BookRack> getAllBookRacks() {
+        return bookRackManager.getAllBookRacks();
     }
 }

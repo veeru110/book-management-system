@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -31,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseVo> login(@Valid @RequestBody LoginCommand loginCommand) {
+    public ResponseEntity<LoginResponseVo> login(@Valid @RequestBody LoginCommand loginCommand) throws Exception{
         LoginResponseVo loginResponseVo = userService.login(loginCommand);
         return new ResponseEntity<>(loginResponseVo, HttpStatus.OK);
     }

@@ -21,7 +21,7 @@ public class Book {
     @Column(name = "available_stock")
     private Long availableStock;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "fk_rack_id", nullable = false)
     private BookRack rack;
 

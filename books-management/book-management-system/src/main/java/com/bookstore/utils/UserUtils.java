@@ -33,4 +33,8 @@ public class UserUtils {
         }
         return userOptional.get();
     }
+
+    public void setUser(String user) {
+        threadLocalAuthBearer.set(user);
+    }
 }

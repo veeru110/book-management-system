@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum UserRole {
-    //ADMIN Created by default while setting up application
     BUYER, SELLER, ADMIN;
 
 

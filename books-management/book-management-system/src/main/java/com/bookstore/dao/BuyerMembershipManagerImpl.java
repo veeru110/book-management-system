@@ -19,7 +19,7 @@ public class BuyerMembershipManagerImpl implements IBuyerMembershipManager {
     }
 
     @Override
-    public List<BuyerMembershipHistory> getAllBuyerMembershipInfos(String username) {
+    public List<BuyerMembershipHistory> getAllBuyerMembershipInfo(String username) {
         if (StringUtils.isEmpty(username)) {
             return buyerMembershipInfoRepository.findAll();
         }

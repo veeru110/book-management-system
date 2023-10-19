@@ -1,6 +1,5 @@
 package com.bookstore.vo;
 
-import jakarta.persistence.Column;
 
 public class MembershipTypesVo {
     private String membershipPremiumLevel;

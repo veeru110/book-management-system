@@ -4,8 +4,7 @@ import com.bookstore.constants.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.List;
+import java.util.Set;
 
 
 public class UserRegistrationCommand {
@@ -23,13 +22,13 @@ public class UserRegistrationCommand {
     @NotEmpty(message = "Password can't be empty")
     private String password;
 
-    private List<String> genresInterested;
+    private Set<String> genresInterested;
 
-    public List<String> getGenresInterested() {
+    public Set<String> getGenresInterested() {
         return genresInterested;
     }
 
-    public void setGenresInterested(List<String> genresInterested) {
+    public void setGenresInterested(Set<String> genresInterested) {
         this.genresInterested = genresInterested;
     }
 

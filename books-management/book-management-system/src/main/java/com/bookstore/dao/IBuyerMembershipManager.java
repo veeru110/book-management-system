@@ -5,7 +5,7 @@ import com.bookstore.model.BuyerMembershipHistory;
 import java.util.List;
 
 public interface IBuyerMembershipManager {
-    List<BuyerMembershipHistory> getAllBuyerMembershipInfos(String username);
+    List<BuyerMembershipHistory> getAllBuyerMembershipInfo(String username);
 
     void save(BuyerMembershipHistory buyerMembershipHistory);
 

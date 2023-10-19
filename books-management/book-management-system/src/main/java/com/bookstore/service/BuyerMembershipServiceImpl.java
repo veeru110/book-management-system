@@ -50,7 +50,7 @@ public class BuyerMembershipServiceImpl implements BuyerMembershipService {
             if (!user.getRole().equals(UserRole.ADMIN.toString())) {
                 username = user.getEmail();
             }
-            List<BuyerMembershipHistory> buyerMembershipHistory = buyerMembershipManager.getAllBuyerMembershipInfos(username);
+            List<BuyerMembershipHistory> buyerMembershipHistory = buyerMembershipManager.getAllBuyerMembershipInfo(username);
             return buyerMembershipHistory.stream().map(b -> mapper.map(b, BuyerMembershipVo.class)).collect(Collectors.toList());
         } catch (Exception e) {
             logger.error("Error while fetching buyer memberships", e);

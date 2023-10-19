@@ -4,7 +4,6 @@ import com.bookstore.command.LoginCommand;
 import com.bookstore.command.UserRegistrationCommand;
 import com.bookstore.config.jwt.JWTService;
 import com.bookstore.constants.UserRole;
-import com.bookstore.dao.IBookRackManager;
 import com.bookstore.dao.IUserManager;
 import com.bookstore.model.BookRack;
 import com.bookstore.model.User;
@@ -74,28 +73,31 @@ public class UserServiceImpl implements IUserService {
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
             user.setRole(userRegistrationCommand.getRole());
+            String userReturnMessage = addUserInterestedGenresAndReturnMessageToUser(userRegistrationCommand.getGenresInterested(), user);
             userManager.save(user);
-            return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null, null);
+            return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null, userReturnMessage);
         } catch (Exception e) {
             logger.error("Error while registering user with username {}", userRegistrationCommand.getEmail(), e);
             throw e;
         }
     }
 
-    private String addUserInterestedGenresAndReturnMessageToUser(Set<String> genresInterested) {
+    private String addUserInterestedGenresAndReturnMessageToUser(Set<String> genresInterested, User user) {
         Set<BookRack> allBookRacks = bookRackManagementService.getAllBookRacks();
         Map<String, BookRack> allBookRacksMap = allBookRacks.stream().collect(Collectors.toMap(BookRack::getRackName, a -> a));
         Set<BookRack> userInterestedBookRacks = new HashSet<>();
         for (String genreInterested : genresInterested) {
-            if (allBookRacks.contains(genreInterested)) {
-                //userInterestedBookRacks.add()
+            if (allBookRacks.contains(new BookRack(genreInterested))) {
+                userInterestedBookRacks.add(allBookRacksMap.get(genreInterested));
             }
         }
-
+        user.setGenresInterested(userInterestedBookRacks);
+        genresInterested.removeAll(userInterestedBookRacks.stream().map(r -> r.getRackName()).collect(Collectors.toSet()));
         if (!CollectionUtils.isEmpty(genresInterested)) {
             return USER_MESSAGE_GENRES_NOT_PRESENT.formatted(String.join(",", genresInterested));
         }
         return null;
+
     }
 
 

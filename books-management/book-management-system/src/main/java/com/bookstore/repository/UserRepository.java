@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select count(userId) from User where role!=com.bookstore.constants.UserRole.ADMIN and isActive=true and isDeleted=false")
     Integer countAllUsers();
 
-    @Query(value = "select u from User where u.role=com.bookstore.constants.UserRole.BUYER and isDeleted=false")
+    @Query(value = "select u from User u where u.role=com.bookstore.constants.UserRole.BUYER and isDeleted=false")
     List<User> getAllBuyers();
 
 }

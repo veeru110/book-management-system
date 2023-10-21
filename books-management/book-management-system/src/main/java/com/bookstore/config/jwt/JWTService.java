@@ -25,9 +25,14 @@ public class JWTService {
     private static final Integer JWT_EXPIRATION_TIME_IN_HRS = 1;
 
     private static Key PRIVATE_KEY;
+    private static String RAW_SHA256_KEY;
 
     public static Key getPrivateKey() {
         return PRIVATE_KEY;
+    }
+
+    public static String getRawSha256Key() {
+        return RAW_SHA256_KEY;
     }
 
     private final ICredentialManager credentialManager;
@@ -42,6 +47,7 @@ public class JWTService {
         if (serverPrivateKeys.isEmpty()) {
             throw new RuntimeException("Server is not configured with private keys");
         }
+        RAW_SHA256_KEY = serverPrivateKeys.get().getPrivateKey();
         PRIVATE_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode(serverPrivateKeys.get().getPrivateKey()));
     }
 

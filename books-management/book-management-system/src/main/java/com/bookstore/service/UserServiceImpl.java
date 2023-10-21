@@ -9,6 +9,7 @@ import com.bookstore.dao.IUserManager;
 import com.bookstore.model.BookRack;
 import com.bookstore.model.User;
 import com.bookstore.utils.UserInfoDetails;
+import com.bookstore.utils.UserUtils;
 import com.bookstore.vo.LoginResponseVo;
 import com.bookstore.vo.UserRegistrationResponseVo;
 import com.bookstore.vo.UserVo;
@@ -49,13 +50,15 @@ public class UserServiceImpl implements IUserService {
     private final IUserManager userManager;
     private final MailService mailService;
 
+    private final UserUtils userUtils;
+
     private final BookRackManagementService bookRackManagementService;
 
     private static final Mapper mapper = new DozerBeanMapper();
 
     @Autowired
     public UserServiceImpl(UserDetailsService userDetailsService, AuthenticationManager authenticationManager,
-                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager, BookRackManagementService bookRackManagementService, MailService mailService) {
+                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager, BookRackManagementService bookRackManagementService, MailService mailService, UserUtils userUtils) {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
@@ -63,6 +66,7 @@ public class UserServiceImpl implements IUserService {
         this.userManager = userManager;
         this.bookRackManagementService = bookRackManagementService;
         this.mailService = mailService;
+        this.userUtils = userUtils;
     }
 
     @Override
@@ -70,7 +74,7 @@ public class UserServiceImpl implements IUserService {
     public UserRegistrationResponseVo registerUser(UserRegistrationCommand userRegistrationCommand, String privateKey) throws Exception {
         try {
             if (Objects.equals(userRegistrationCommand.getRole(), UserRole.ADMIN)) {
-                if (!StringUtils.equals(new String(JWTService.getPrivateKey().getEncoded()), privateKey)) {
+                if (!StringUtils.equals(new String(JWTService.getRawSha256Key()), privateKey)) {
                     throw new AuthenticationServiceException("Not allowed");
                 }
             }
@@ -142,6 +146,5 @@ public class UserServiceImpl implements IUserService {
             throw e;
         }
     }
-
 
 }

@@ -5,7 +5,9 @@ import com.bookstore.command.BooksCommand;
 import com.bookstore.service.BookManagementService;
 import com.bookstore.service.BookRackManagementService;
 import com.bookstore.vo.ErrorVo;
+import freemarker.template.TemplateException;
 import jakarta.annotation.PostConstruct;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +47,7 @@ public class BooksController {
 
     @PreAuthorize("hasRole('ADMIN','SELLER')")
     @PostMapping("/addBooksStock")
-    public ResponseEntity<Object> addBooksStock(@RequestBody List<BooksCommand> booksCommands) {
+    public ResponseEntity<Object> addBooksStock(@RequestBody List<BooksCommand> booksCommands) throws MessagingException, TemplateException, IOException {
         List<ErrorVo> errorVos = bookManagementService.addBooksStock(booksCommands);
         if (CollectionUtils.isEmpty(errorVos)) {
             return new ResponseEntity<>(errorVos, HttpStatus.PARTIAL_CONTENT);

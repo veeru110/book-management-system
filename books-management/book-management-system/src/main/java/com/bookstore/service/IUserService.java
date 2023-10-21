@@ -14,5 +14,4 @@ public interface IUserService {
     LoginResponseVo login(LoginCommand loginCommand) throws Exception;
 
     UserVo getUserVo() throws RuntimeException;
-
 }

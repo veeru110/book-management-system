@@ -39,7 +39,7 @@ public class BuyerMembershipController {
 
     @PreAuthorize("hasRole('BUYER')")
     @PostMapping("/buyMembership")
-    public ResponseEntity<BuyerMembershipVo> buyMembership(@RequestBody BuyerMembershipCommand buyerMembershipCommand) {
+    public ResponseEntity<BuyerMembershipVo> buyMembership(@RequestBody BuyerMembershipCommand buyerMembershipCommand) throws Exception {
         BuyerMembershipVo buyerMembershipVo = buyerMembershipService.buyMembership(buyerMembershipCommand);
         return new ResponseEntity<>(buyerMembershipVo, HttpStatus.OK);
     }

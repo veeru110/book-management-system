@@ -80,7 +80,7 @@ public class UserServiceImpl implements IUserService {
             user.setRole(userRegistrationCommand.getRole());
             String userReturnMessage = addUserInterestedGenresAndReturnMessageToUser(userRegistrationCommand.getGenresInterested(), user);
             userManager.save(user);
-            mailService.sendEmail(EmailEvents.REGISTRATION, user);
+            mailService.sendEmailSimple(EmailEvents.REGISTRATION, user);
             return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null, userReturnMessage);
         } catch (Exception e) {
             logger.error("Error while registering user with username {}", userRegistrationCommand.getEmail(), e);

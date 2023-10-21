@@ -2,18 +2,24 @@ package com.bookstore.service;
 
 import com.bookstore.command.BookSaleCommand;
 import com.bookstore.command.BooksCommand;
+import com.bookstore.constants.EmailEvents;
 import com.bookstore.dao.IBookManager;
 import com.bookstore.model.BookRack;
 import com.bookstore.model.Book;
 import com.bookstore.model.BuyerMembershipHistory;
 import com.bookstore.utils.UserUtils;
+import com.bookstore.vo.EmailTableRow;
+import com.bookstore.vo.EmailTableVo;
 import com.bookstore.vo.ErrorVo;
+import freemarker.template.TemplateException;
+import jakarta.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +32,7 @@ public class BookManagementServiceImpl implements BookManagementService {
 
     private final IBookManager bookManager;
     private final UserUtils userUtils;
+    private final MailService mailService;
 
     private static final Mapper mapper = new DozerBeanMapper();
 
@@ -38,9 +45,10 @@ public class BookManagementServiceImpl implements BookManagementService {
         return rackExplicitLocks.get(bookCategory);
     }
 
-    public BookManagementServiceImpl(IBookManager bookManager, UserUtils userUtils) {
+    public BookManagementServiceImpl(IBookManager bookManager, UserUtils userUtils, MailService mailService) {
         this.bookManager = bookManager;
         this.userUtils = userUtils;
+        this.mailService = mailService;
     }
 
     enum BookMovementType {
@@ -75,11 +83,14 @@ public class BookManagementServiceImpl implements BookManagementService {
     }
 
     @Override
-    public List<ErrorVo> addBooksStock(List<BooksCommand> booksCommands) throws RuntimeException {
+    public List<ErrorVo> addBooksStock(List<BooksCommand> booksCommands) throws RuntimeException, MessagingException, TemplateException, IOException {
         List<ErrorVo> errorVos = new ArrayList<>();
+        EmailTableVo emailTableVo = new EmailTableVo("BookGenre", "BookName");
         for (BooksCommand booksCommand : booksCommands) {
             doInwardBookStockOne(booksCommand, errorVos);
+            emailTableVo.addTableRow(new EmailTableRow(booksCommand.getGenre(), booksCommand.getBookName()));
         }
+        mailService.sendEmailToAllBuyers(EmailEvents.STOCK_INWARD,emailTableVo);
         return errorVos;
     }
 

@@ -5,6 +5,7 @@ import com.bookstore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -26,6 +27,11 @@ public class UserManagerImpl implements IUserManager {
     @Override
     public Integer countAllUsers() {
         return userRepository.countAllUsers();
+    }
+
+    @Override
+    public List<User> allBuyers() {
+        return userRepository.getAllBuyers();
     }
 
     @Override

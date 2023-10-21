@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class TemplateMerger {
@@ -21,7 +22,7 @@ public class TemplateMerger {
         this.configuration = configuration;
     }
 
-    public String getContentUsingTemplate(Map<String, String> dataModel, String templateName) throws IOException, TemplateException {
+    public String getContentUsingTemplate(Map<String, Object> dataModel, String templateName) throws IOException, TemplateException {
         Template template = configuration.getTemplate(templateName + ".ftl");
         StringWriter writer = new StringWriter();
         template.process(dataModel, writer);

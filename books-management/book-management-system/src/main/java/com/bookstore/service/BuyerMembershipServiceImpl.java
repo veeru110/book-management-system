@@ -1,6 +1,7 @@
 package com.bookstore.service;
 
 import com.bookstore.command.BuyerMembershipCommand;
+import com.bookstore.constants.EmailEvents;
 import com.bookstore.constants.UserRole;
 import com.bookstore.dao.IBuyerMembershipManager;
 import com.bookstore.dao.IMembershipManager;
@@ -34,13 +35,15 @@ public class BuyerMembershipServiceImpl implements BuyerMembershipService {
     private final IBuyerMembershipManager buyerMembershipManager;
     private final IMembershipManager membershipManager;
     private final UserUtils userUtils;
+    private final MailService mailService;
 
 
     @Autowired
-    public BuyerMembershipServiceImpl(IBuyerMembershipManager buyerMembershipManager, UserUtils userUtils, IMembershipManager membershipManager) {
+    public BuyerMembershipServiceImpl(IBuyerMembershipManager buyerMembershipManager, UserUtils userUtils, IMembershipManager membershipManager, MailService mailService) {
         this.buyerMembershipManager = buyerMembershipManager;
         this.userUtils = userUtils;
         this.membershipManager = membershipManager;
+        this.mailService = mailService;
     }
 
 
@@ -61,7 +64,7 @@ public class BuyerMembershipServiceImpl implements BuyerMembershipService {
     }
 
     @Override
-    public BuyerMembershipVo buyMembership(BuyerMembershipCommand buyerMembershipCommand) {
+    public BuyerMembershipVo buyMembership(BuyerMembershipCommand buyerMembershipCommand) throws Exception {
         try {
             User user = userUtils.getUser();
             if (user.getRole().equals(UserRole.ADMIN)) {
@@ -77,6 +80,7 @@ public class BuyerMembershipServiceImpl implements BuyerMembershipService {
             buyerMembershipHistory.setMembershipEndDate(DateUtils.addDays(buyerMembershipHistory.getMembershipStartDate(), membershipTypes.getMembershipDurationInDays()));
             buyerMembershipHistory.setMembershipPrice(membershipTypes.getMembershipPrice());
             buyerMembershipManager.save(buyerMembershipHistory);
+            mailService.sendEmailSimple(EmailEvents.MEMBERSHIP, user);
             return mapper.map(buyerMembershipHistory, BuyerMembershipVo.class);
         } catch (Exception e) {
             logger.error("Error while buying membership", e);

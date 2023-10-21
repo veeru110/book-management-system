@@ -1,16 +1,19 @@
 package com.bookstore.service;
 
 import com.bookstore.constants.EmailEvents;
-import com.bookstore.constants.UserRole;
 import com.bookstore.model.User;
+import com.bookstore.vo.EmailTableVo;
 import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
-import java.util.Map;
 
 public interface MailService {
-    void sendEmail(String subject, String toEmail, String cc, String bcc, String greeting, String name, String body) throws MessagingException, TemplateException, IOException;
+    void sendEmailSimple(String subject, String toEmail, String cc, String bcc, String emailText) throws MessagingException, TemplateException, IOException;
 
-    void sendEmail(EmailEvents emailEvents,  User user) throws MessagingException, TemplateException, IOException;
+    void sendEmailSimple(EmailEvents emailEvents, User user) throws MessagingException, TemplateException, IOException;
+
+    void sendEmailToAllBuyers(EmailEvents emailEvents, EmailTableVo emailTableVo) throws MessagingException, TemplateException, IOException;
+
+    void sendEmailWithTable(EmailEvents emailEvents, User user, EmailTableVo emailTableVo) throws MessagingException, TemplateException, IOException;
 }

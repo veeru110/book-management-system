@@ -10,7 +10,7 @@ public interface BuyerMembershipService {
 
     List<BuyerMembershipVo> getAllBuyersMemberships();
 
-    BuyerMembershipVo buyMembership(BuyerMembershipCommand buyerMembershipCommand);
+    BuyerMembershipVo buyMembership(BuyerMembershipCommand buyerMembershipCommand) throws Exception;
 
     MembershipTypeVo addMembershipLevel(BuyerMembershipCommand buyerMembershipCommand) throws Exception;
 }

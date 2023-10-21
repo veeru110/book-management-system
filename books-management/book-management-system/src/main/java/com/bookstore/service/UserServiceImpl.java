@@ -3,6 +3,7 @@ package com.bookstore.service;
 import com.bookstore.command.LoginCommand;
 import com.bookstore.command.UserRegistrationCommand;
 import com.bookstore.config.jwt.JWTService;
+import com.bookstore.constants.EmailEvents;
 import com.bookstore.constants.UserRole;
 import com.bookstore.dao.IUserManager;
 import com.bookstore.model.BookRack;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,19 +47,22 @@ public class UserServiceImpl implements IUserService {
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final IUserManager userManager;
+    private final MailService mailService;
 
     private final BookRackManagementService bookRackManagementService;
 
     private static final Mapper mapper = new DozerBeanMapper();
 
+    @Autowired
     public UserServiceImpl(UserDetailsService userDetailsService, AuthenticationManager authenticationManager,
-                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager, BookRackManagementService bookRackManagementService) {
+                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager, BookRackManagementService bookRackManagementService, MailService mailService) {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.userManager = userManager;
         this.bookRackManagementService = bookRackManagementService;
+        this.mailService = mailService;
     }
 
     @Override
@@ -75,6 +80,7 @@ public class UserServiceImpl implements IUserService {
             user.setRole(userRegistrationCommand.getRole());
             String userReturnMessage = addUserInterestedGenresAndReturnMessageToUser(userRegistrationCommand.getGenresInterested(), user);
             userManager.save(user);
+            mailService.sendEmail(EmailEvents.REGISTRATION, user);
             return new UserRegistrationResponseVo(user.getEmail(), LocalDateTime.now(), true, null, userReturnMessage);
         } catch (Exception e) {
             logger.error("Error while registering user with username {}", userRegistrationCommand.getEmail(), e);
@@ -92,7 +98,7 @@ public class UserServiceImpl implements IUserService {
             }
         }
         user.setGenresInterested(userInterestedBookRacks);
-        genresInterested.removeAll(userInterestedBookRacks.stream().map(r -> r.getRackName()).collect(Collectors.toSet()));
+        genresInterested.removeAll(userInterestedBookRacks.stream().map(BookRack::getRackName).collect(Collectors.toSet()));
         if (!CollectionUtils.isEmpty(genresInterested)) {
             return USER_MESSAGE_GENRES_NOT_PRESENT.formatted(String.join(",", genresInterested));
         }

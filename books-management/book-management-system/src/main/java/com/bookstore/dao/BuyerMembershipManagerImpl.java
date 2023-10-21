@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BuyerMembershipManagerImpl implements IBuyerMembershipManager {
@@ -29,5 +30,10 @@ public class BuyerMembershipManagerImpl implements IBuyerMembershipManager {
     @Override
     public void save(BuyerMembershipHistory buyerMembershipHistory) {
         buyerMembershipInfoRepository.save(buyerMembershipHistory);
+    }
+
+    @Override
+    public Optional<BuyerMembershipHistory> getActiveMembershipForTheUser(String username) {
+        return buyerMembershipInfoRepository.getActiveMembershipForTheUser(username);
     }
 }

@@ -8,4 +8,6 @@ public interface IMembershipManager {
     List<MembershipTypes> getAllMemberships();
 
     MembershipTypes findByPremiumLevelAndMembershipDuration(String premiumLevel, Integer membershipDuration);
+
+    MembershipTypes save(MembershipTypes membershipTypes);
 }

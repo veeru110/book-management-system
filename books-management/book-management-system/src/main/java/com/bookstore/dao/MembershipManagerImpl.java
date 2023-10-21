@@ -26,4 +26,9 @@ public class MembershipManagerImpl implements IMembershipManager {
     public MembershipTypes findByPremiumLevelAndMembershipDuration(String premiumLevel, Integer membershipDuration) {
         return membershipTypeRepository.findByMembershipPremiumLevelAndMembershipDurationInDays(premiumLevel, membershipDuration);
     }
+
+    @Override
+    public MembershipTypes save(MembershipTypes membershipTypes) {
+        return membershipTypeRepository.save(membershipTypes);
+    }
 }

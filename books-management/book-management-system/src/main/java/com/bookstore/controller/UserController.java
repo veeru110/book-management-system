@@ -6,6 +6,10 @@ import com.bookstore.service.IUserService;
 import com.bookstore.vo.LoginResponseVo;
 import com.bookstore.vo.UserRegistrationResponseVo;
 import com.bookstore.vo.UserVo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +29,19 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegistrationResponseVo> registerUser(@Valid @RequestBody UserRegistrationCommand userRegistrationCommand, @RequestHeader(value = "privateKey", required = false) String privateKey) throws Exception {
+    @Operation(summary = "This is used to register user themselves as Buyer or Seller")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User registered successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+            @ApiResponse(responseCode = "400", description = "Bad Request, User is suggested to check request body")
+    })
+    public ResponseEntity<UserRegistrationResponseVo> registerUser(@Valid @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true) @RequestBody UserRegistrationCommand userRegistrationCommand, @RequestHeader(value = "privateKey", required = false) String privateKey) throws Exception {
         UserRegistrationResponseVo userRegistrationResponseVo = userService.registerUser(userRegistrationCommand, privateKey);
         return new ResponseEntity<>(userRegistrationResponseVo, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseVo> login(@Valid @RequestBody LoginCommand loginCommand) throws Exception{
+    public ResponseEntity<LoginResponseVo> login(@Valid @RequestBody LoginCommand loginCommand) throws Exception {
         LoginResponseVo loginResponseVo = userService.login(loginCommand);
         return new ResponseEntity<>(loginResponseVo, HttpStatus.OK);
     }

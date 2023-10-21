@@ -24,7 +24,7 @@ public class TemplateMerger {
     public String getContentUsingTemplate(Map<String, String> dataModel, String templateName) throws IOException, TemplateException {
         Template template = configuration.getTemplate(templateName + ".ftl");
         StringWriter writer = new StringWriter();
-        template.process(template,writer);
+        template.process(dataModel, writer);
         return writer.toString();
     }
 }

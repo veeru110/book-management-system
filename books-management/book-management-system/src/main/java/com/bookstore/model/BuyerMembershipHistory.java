@@ -3,6 +3,7 @@ package com.bookstore.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "buyer_membership_history")
@@ -30,6 +31,17 @@ public class BuyerMembershipHistory {
 
     @Column(name = "membership_end_data")
     private Date membershipEndDate;
+
+    @OneToMany(mappedBy = "buyerMembershipHistory")
+    List<BookStoreTransactionHistory> bookStoreTransactionHistories;
+
+    public List<BookStoreTransactionHistory> getBookStoreTransactionHistories() {
+        return bookStoreTransactionHistories;
+    }
+
+    public void setBookStoreTransactionHistories(List<BookStoreTransactionHistory> bookStoreTransactionHistories) {
+        this.bookStoreTransactionHistories = bookStoreTransactionHistories;
+    }
 
     public Date getMembershipStartDate() {
         return membershipStartDate;

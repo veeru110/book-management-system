@@ -3,6 +3,7 @@ package com.bookstore.controller;
 import com.bookstore.command.BuyerMembershipCommand;
 import com.bookstore.service.BuyerMembershipService;
 import com.bookstore.vo.BuyerMembershipVo;
+import com.bookstore.vo.MembershipTypeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,13 @@ public class BuyerMembershipController {
     public ResponseEntity<List<BuyerMembershipVo>> getAllBuyerMemberships() {
         List<BuyerMembershipVo> buyerMembershipVos = buyerMembershipService.getAllBuyersMemberships();
         return new ResponseEntity<>(buyerMembershipVos, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/addMembershipPremiumLevel")
+    public ResponseEntity<MembershipTypeVo> addMembershipLevel(@RequestBody BuyerMembershipCommand buyerMembershipCommand) throws Exception {
+        MembershipTypeVo membershipTypeVo = buyerMembershipService.addMembershipLevel(buyerMembershipCommand);
+        return new ResponseEntity<>(membershipTypeVo, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('BUYER')")

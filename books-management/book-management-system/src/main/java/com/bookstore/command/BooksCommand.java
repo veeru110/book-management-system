@@ -4,8 +4,18 @@ public class BooksCommand {
     private String bookName;
     private Integer edition;
     private String authorNames;
-    private Long stockInward;
+    private Integer stockInward;
     private String genre;
+
+    private Double totalPrice;
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
     public String getBookName() {
         return bookName;
@@ -31,11 +41,11 @@ public class BooksCommand {
         this.authorNames = authorNames;
     }
 
-    public Long getStockInward() {
+    public Integer getStockInward() {
         return stockInward;
     }
 
-    public void setStockInward(Long stockInward) {
+    public void setStockInward(Integer stockInward) {
         this.stockInward = stockInward;
     }
 
@@ -53,8 +63,9 @@ public class BooksCommand {
         sb.append("bookName='").append(bookName).append('\'');
         sb.append(", edition=").append(edition);
         sb.append(", authorNames='").append(authorNames).append('\'');
-        sb.append(", availableStock=").append(stockInward);
-        sb.append(", bookCategory='").append(genre).append('\'');
+        sb.append(", stockInward=").append(stockInward);
+        sb.append(", genre='").append(genre).append('\'');
+        sb.append(", totalPrice=").append(totalPrice);
         sb.append('}');
         return sb.toString();
     }

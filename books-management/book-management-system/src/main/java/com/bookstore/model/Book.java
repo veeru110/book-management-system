@@ -21,9 +21,20 @@ public class Book {
     @Column(name = "available_stock")
     private Long availableStock;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_rack_id", nullable = false)
     private BookRack rack;
+
+    @Column(name = "book_price")
+    private Double bookPrice;
+
+    public Double getBookPrice() {
+        return bookPrice;
+    }
+
+    public void setBookPrice(Double bookPrice) {
+        this.bookPrice = bookPrice;
+    }
 
     public BookRack getRack() {
         return rack;

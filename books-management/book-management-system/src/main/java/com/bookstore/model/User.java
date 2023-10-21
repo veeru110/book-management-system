@@ -51,6 +51,17 @@ public class User {
     })
     private Set<BookRack> genresInterested;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<BookStoreTransactionHistory> bookStoreTransactionHistories;
+
+    public List<BookStoreTransactionHistory> getBookStoreTransactionHistories() {
+        return bookStoreTransactionHistories;
+    }
+
+    public void setBookStoreTransactionHistories(List<BookStoreTransactionHistory> bookStoreTransactionHistories) {
+        this.bookStoreTransactionHistories = bookStoreTransactionHistories;
+    }
+
     public Set<BookRack> getGenresInterested() {
         return genresInterested;
     }

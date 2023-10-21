@@ -4,10 +4,15 @@ import com.bookstore.constants.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.util.Set;
 
 
 public class UserRegistrationCommand {
+    @NotNull
+    @NotEmpty
+    @Size(min = 3)
     private String firstName;
 
     private String lastName;

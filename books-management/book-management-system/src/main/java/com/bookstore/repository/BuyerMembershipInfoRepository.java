@@ -17,4 +17,7 @@ public interface BuyerMembershipInfoRepository extends JpaRepository<BuyerMember
 
     @Query(value = "SELECT b FROM BuyerMembershipHistory b where b.user.email=:email order by b.membershipStartDate desc, b.membershipType.discountPercentage desc limit 1")
     Optional<BuyerMembershipHistory> getActiveMembershipForTheUser(@Param("email") String email);
+
+    @Query(value = "SELECT b from BuyerMembershipHistory b where b.membershipEndDate>now() and b.membershipType.enablePromotionalNotifications=true and b.user.isDeleted=false group by b.user.userId")
+    List<BuyerMembershipHistory> getAllActiveBuyerMemberships();
 }

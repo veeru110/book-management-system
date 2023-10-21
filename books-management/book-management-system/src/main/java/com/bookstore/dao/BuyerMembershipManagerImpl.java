@@ -36,4 +36,9 @@ public class BuyerMembershipManagerImpl implements IBuyerMembershipManager {
     public Optional<BuyerMembershipHistory> getActiveMembershipForTheUser(String username) {
         return buyerMembershipInfoRepository.getActiveMembershipForTheUser(username);
     }
+
+    @Override
+    public List<BuyerMembershipHistory> getAllActiveBuyerMemberships() {
+        return buyerMembershipInfoRepository.getAllActiveBuyerMemberships();
+    }
 }

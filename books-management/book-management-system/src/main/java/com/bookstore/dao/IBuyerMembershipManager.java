@@ -12,4 +12,6 @@ public interface IBuyerMembershipManager {
 
     Optional<BuyerMembershipHistory> getActiveMembershipForTheUser(String username);
 
+    List<BuyerMembershipHistory> getAllActiveBuyerMemberships();
+
 }

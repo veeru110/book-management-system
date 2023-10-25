@@ -42,13 +42,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         try {
             logger.info("Context path is {}", request.getServletPath());
             for (String contextPath : UNAUTHENTICATED_CONTEXT_PATHS) {
-                if (StringUtils.contains(request.getServletPath(), contextPath)) {
+                if (StringUtils.equals(request.getServletPath(), contextPath)) {
+                    logger.info("Context path {}. servlet path {}", contextPath, request.getServletPath());
                     filterChain.doFilter(request, response);
                     return;
                 }
             }
 
             String authHeader = request.getHeader(AUTHORIZATION);
+            logger.info("Auth Header {}",authHeader);
             if (!StringUtils.startsWith(authHeader, BEARER)) {
                 //send to Dispatcher servlet
                 filterChain.doFilter(request, response);

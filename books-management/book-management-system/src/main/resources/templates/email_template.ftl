@@ -6,7 +6,7 @@
 <body>
 	<h3>Dear ${name},</h3>
 	<p>${body}</p>
-	<#if tableExists?? && tableExists == 'true'>
+	<#if tableExists?? && tableExists == true>
 	<table>
 	    <thead>
 	        <th>${column1}</th>
@@ -15,8 +15,8 @@
 	    <tbody>
 	        <#list dataItr as data>
 	            <tr>
-	                <td>dataItr.column1</td>
-	                <td>dataItr.column2</td>
+	                <td>${dataItr.column1}</td>
+	                <td>${dataItr.column2}</td>
 	            </tr>
 	        </#list>
 	    </tbody>

@@ -36,7 +36,7 @@ public class BookStoreEmailConfig {
     @Bean
     public JavaMailSender bookStoreMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-        javaMailSender.setHost(emailServer);
+        javaMailSender.setHost(emailServer);//smtp server
         javaMailSender.setUsername(username);
         javaMailSender.setPassword(password);
         javaMailSender.setPort(port);

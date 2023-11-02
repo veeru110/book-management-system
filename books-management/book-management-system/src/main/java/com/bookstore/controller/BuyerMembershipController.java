@@ -4,6 +4,7 @@ import com.bookstore.command.BuyerMembershipCommand;
 import com.bookstore.service.BuyerMembershipService;
 import com.bookstore.vo.BuyerMembershipVo;
 import com.bookstore.vo.MembershipTypeVo;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/buyerMemberships")
-@PreAuthorize("hasRole('BUYER','ADMIN')")
+@PreAuthorize("hasAnyRole('BUYER','ADMIN')")
+@SecurityRequirement(name = "Authorization")
 public class BuyerMembershipController {
 
     private final BuyerMembershipService buyerMembershipService;

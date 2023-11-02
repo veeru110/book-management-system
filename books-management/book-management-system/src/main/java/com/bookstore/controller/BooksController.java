@@ -6,6 +6,7 @@ import com.bookstore.service.BookManagementService;
 import com.bookstore.service.BookRackManagementService;
 import com.bookstore.vo.ErrorVo;
 import freemarker.template.TemplateException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -15,10 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +24,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/books")
+@SecurityRequirement(name = "Authorization")
 public class BooksController {
 
     private final BookManagementService bookManagementService;
@@ -45,7 +44,7 @@ public class BooksController {
         bookRackManagementService.saveNewRacks(bookGenreTypes);
     }
 
-    @PreAuthorize("hasRole('ADMIN','SELLER')")
+    @PreAuthorize("hasAnyRole('ADMIN','SELLER')")
     @PostMapping("/addBooksStock")
     public ResponseEntity<Object> addBooksStock(@RequestBody List<BooksCommand> booksCommands) throws MessagingException, TemplateException, IOException {
         List<ErrorVo> errorVos = bookManagementService.addBooksStock(booksCommands);
@@ -65,8 +64,8 @@ public class BooksController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('BUYER','ADMIN','SELLER')")
-    @PostMapping("/allAvailableGenres")
+    @PreAuthorize("hasAnyRole('BUYER','ADMIN','SELLER')")
+    @GetMapping("/allAvailableGenres")
     public ResponseEntity<Set<String>> getAllGenres() {
         Set<String> allGenres = bookRackManagementService.getAllGenres();
         return new ResponseEntity<>(allGenres, HttpStatus.OK);

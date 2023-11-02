@@ -36,7 +36,7 @@ public class CronJobs {
         this.bookManager = bookManager;
     }
 
-    @Scheduled(cron = "0 12 * * *")
+    @Scheduled(cron = "0 0 * * *")
     public void sendPromotionNotificationForPremiumUsers() {
         List<BuyerMembershipHistory> allActiveBuyerMemberships = buyerMembershipManager.getAllActiveBuyerMemberships();
         if (CollectionUtils.isEmpty(allActiveBuyerMemberships)) {

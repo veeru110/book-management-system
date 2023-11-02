@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@SecurityRequirement(name = "Authorization")
 public class UserController {
 
     private final IUserService userService;
@@ -49,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/getUserInfo")
-    @PreAuthorize("hasRole('ADMIN','BUYER','SELLER')")
+    @PreAuthorize("hasAnyRole('ADMIN','BUYER','SELLER')")
     public ResponseEntity<UserVo> getUserInfo() {
         return new ResponseEntity<>(userService.getUserVo(), HttpStatus.OK);
     }

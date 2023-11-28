@@ -9,7 +9,7 @@ public interface IBookRackManager {
 
     BookRack findByRackName(String rackName);
 
-    void save(BookRack bookRack);
+    BookRack save(BookRack bookRack);
 
     Set<String> getAllGenres();
 

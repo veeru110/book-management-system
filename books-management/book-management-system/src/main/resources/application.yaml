@@ -1,0 +1,34 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/book_store
+    username: akhil
+    password: "@Khil401"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+server:
+  port: 8097
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+  servlet:
+    context-path: /bookstore/api
+
+books:
+  genre:
+    types: Fiction, Romance, Science Fiction, Fantasy, Mystery, Non-Fiction, Historical Fiction, Horror, Biography, Self-Help, Children's Literature, Poetry
+
+email:
+  server:
+    host: smtp.gmail.com
+    port: 587
+  username: akhil.ambati9030@gmail.com
+  password: tqxv zepj onxr ahuk

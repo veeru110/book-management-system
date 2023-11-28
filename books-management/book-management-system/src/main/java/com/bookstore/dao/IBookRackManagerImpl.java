@@ -24,8 +24,8 @@ public class IBookRackManagerImpl implements IBookRackManager{
     }
 
     @Override
-    public void save(BookRack bookRack) {
-        bookRackRepository.save(bookRack);
+    public BookRack save(BookRack bookRack) {
+        return bookRackRepository.save(bookRack);
     }
 
     @Override

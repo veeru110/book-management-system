@@ -48,7 +48,7 @@ public class BooksController {
     @PostMapping("/addBooksStock")
     public ResponseEntity<Object> addBooksStock(@RequestBody List<BooksCommand> booksCommands) throws MessagingException, TemplateException, IOException {
         List<ErrorVo> errorVos = bookManagementService.addBooksStock(booksCommands);
-        if (CollectionUtils.isEmpty(errorVos)) {
+        if (!CollectionUtils.isEmpty(errorVos)) {
             return new ResponseEntity<>(errorVos, HttpStatus.PARTIAL_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -56,9 +56,9 @@ public class BooksController {
 
     @PreAuthorize("hasRole('BUYER')")
     @PostMapping("/buyBook")
-    public ResponseEntity<Object> buyBook(@Valid @RequestBody List<BookSaleCommand> bookSaleCommands) {
+    public ResponseEntity<Object> buyBook(@Valid @RequestBody List<BookSaleCommand> bookSaleCommands) throws Exception{
         List<ErrorVo> errorVos = bookManagementService.saleBooks(bookSaleCommands);
-        if (CollectionUtils.isEmpty(errorVos)) {
+        if (!CollectionUtils.isEmpty(errorVos)) {
             return new ResponseEntity<>(errorVos, HttpStatus.PARTIAL_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.OK);

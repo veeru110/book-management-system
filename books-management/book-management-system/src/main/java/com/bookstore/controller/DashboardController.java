@@ -21,7 +21,7 @@ public class DashboardController {
     }
 
     @GetMapping
-    public ResponseEntity<DashboardVo> stats() {
+    public ResponseEntity<DashboardVo> stats() throws RuntimeException {
         DashboardVo dashboardVo = dashboardService.getDashboardStats();
         return new ResponseEntity<>(dashboardVo, HttpStatus.OK);
     }

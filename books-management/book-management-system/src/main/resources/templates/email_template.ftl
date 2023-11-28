@@ -15,8 +15,8 @@
 	    <tbody>
 	        <#list dataItr as data>
 	            <tr>
-	                <td>${dataItr.column1}</td>
-	                <td>${dataItr.column2}</td>
+	                <td>${data.column1}</td>
+	                <td>${data.column2}</td>
 	            </tr>
 	        </#list>
 	    </tbody>

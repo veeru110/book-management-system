@@ -18,7 +18,10 @@ public class BookStoreTransactionHistory {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_bought", referencedColumnName = "book_name", nullable = false)
+    @JoinColumns({
+            @JoinColumn(name = "fk_book_name", referencedColumnName = "book_name", nullable = false),
+            @JoinColumn(name = "fk_edition_id", referencedColumnName = "edition", nullable = false)
+    })
     private Book bookBought;
 
     @ManyToOne(fetch = FetchType.LAZY)

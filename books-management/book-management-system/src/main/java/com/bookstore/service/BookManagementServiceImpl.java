@@ -4,9 +4,11 @@ import com.bookstore.command.BookSaleCommand;
 import com.bookstore.command.BooksCommand;
 import com.bookstore.constants.EmailEvents;
 import com.bookstore.dao.IBookManager;
+import com.bookstore.dao.IBookRackManager;
 import com.bookstore.model.BookRack;
 import com.bookstore.model.Book;
 import com.bookstore.model.BuyerMembershipHistory;
+import com.bookstore.model.User;
 import com.bookstore.utils.UserUtils;
 import com.bookstore.vo.EmailTableRow;
 import com.bookstore.vo.EmailTableVo;
@@ -34,6 +36,8 @@ public class BookManagementServiceImpl implements BookManagementService {
     private final UserUtils userUtils;
     private final MailService mailService;
 
+    private final IBookRackManager bookRackManager;
+
     private static final Mapper mapper = new DozerBeanMapper();
 
     private static final Map<String, ReentrantLock> rackExplicitLocks = new ConcurrentHashMap<>();
@@ -45,14 +49,11 @@ public class BookManagementServiceImpl implements BookManagementService {
         return rackExplicitLocks.get(bookCategory);
     }
 
-    public BookManagementServiceImpl(IBookManager bookManager, UserUtils userUtils, MailService mailService) {
+    public BookManagementServiceImpl(IBookManager bookManager, UserUtils userUtils, MailService mailService, IBookRackManager bookRackManager) {
         this.bookManager = bookManager;
         this.userUtils = userUtils;
         this.mailService = mailService;
-    }
-
-    enum BookMovementType {
-        STOCK_INWARD, SALE
+        this.bookRackManager = bookRackManager;
     }
 
     private void doInwardBookStockOne(BooksCommand booksCommand, List<ErrorVo> errorVos) {
@@ -63,18 +64,22 @@ public class BookManagementServiceImpl implements BookManagementService {
             if (rackExplicitLock.tryLock(30, TimeUnit.SECONDS)) {
                 Book book = bookManager.getBookByNameAndEdition(booksCommand.getBookName(), booksCommand.getEdition());
                 if (Objects.isNull(book)) {
-                    BookRack bookRack = new BookRack();
-                    bookRack.setRackName(rack);
-
+                    BookRack bookRack = bookRackManager.findByRackName(rack);
+                    if (Objects.isNull(bookRack)) {
+                        bookRack = new BookRack();
+                        bookRack.setRackName(rack);
+                        bookRack = bookRackManager.save(bookRack);
+                    }
                     book = mapper.map(booksCommand, Book.class);
                     book.setRack(bookRack);
-                    book.setAvailableStock(0l);
+                    book.setAvailableStock(0L);
+                    book.setBookPrice(booksCommand.getTotalPrice() / booksCommand.getStockInward());
                 }
                 book.setAvailableStock(book.getAvailableStock() + booksCommand.getStockInward());
                 bookManager.stockInward(book, userUtils.getUser(), booksCommand.getTotalPrice(), booksCommand.getStockInward());
             }
         } catch (Exception e) {
-            logger.error("Error while acquiring lock for rack " + rack);
+            logger.error("Error while acquiring lock for rack " + rack, e);
             errorVos.add(new ErrorVo("Book Inward for " + booksCommand.getBookName(), e.getMessage()));
         } finally {
             logger.info("Releasing lock for rack {}", rack);
@@ -90,11 +95,11 @@ public class BookManagementServiceImpl implements BookManagementService {
             doInwardBookStockOne(booksCommand, errorVos);
             emailTableVo.addTableRow(new EmailTableRow(booksCommand.getGenre(), booksCommand.getBookName()));
         }
-        mailService.sendEmailToAllBuyers(EmailEvents.STOCK_INWARD,emailTableVo);
+        mailService.sendEmailToAllBuyers(EmailEvents.STOCK_INWARD, emailTableVo);
         return errorVos;
     }
 
-    private void doSaleBookOne(BookSaleCommand bookSaleCommand, List<ErrorVo> errorVos, Optional<BuyerMembershipHistory> buyerMembershipHistory) {
+    private void doSaleBookOne(BookSaleCommand bookSaleCommand, List<ErrorVo> errorVos, Optional<BuyerMembershipHistory> buyerMembershipHistory, User buyer) {
         Book book = bookManager.getBookByNameAndEdition(bookSaleCommand.getBookName(), bookSaleCommand.getEdition());
         if (Objects.isNull(book)) {
             errorVos.add(new ErrorVo("No Books found with " + bookSaleCommand.getBookName() + " and edition " + bookSaleCommand.getEdition(), "Not found"));
@@ -111,14 +116,14 @@ public class BookManagementServiceImpl implements BookManagementService {
                 }
                 book.setAvailableStock(book.getAvailableStock() - bookSaleCommand.getCountRequired());
 
-                Double actualPrice = bookSaleCommand.getCountRequired() * book.getBookPrice();
-                Double discountAmount = 0d;
+                double actualPrice = bookSaleCommand.getCountRequired() * book.getBookPrice();
+                double discountAmount = 0d;
                 BuyerMembershipHistory buyerMembership = buyerMembershipHistory.orElse(null);
                 if (!Objects.isNull(buyerMembership)) {
                     discountAmount = (0.01d * buyerMembership.getMembershipType().getDiscountPercentage()) * actualPrice;
                 }
 
-                bookManager.updateStockAfterSale(book, buyerMembership, actualPrice, discountAmount);
+                bookManager.updateStockAfterSale(book, buyerMembership, actualPrice, discountAmount, buyer);
             }
         } catch (InterruptedException e) {
             logger.error("Error while acquiring lock for rack " + rack);
@@ -132,11 +137,17 @@ public class BookManagementServiceImpl implements BookManagementService {
 
     @Override
     public List<ErrorVo> saleBooks(List<BookSaleCommand> bookSaleCommands) {
-        Optional<BuyerMembershipHistory> activeBuyerMembership = userUtils.getActiveBuyerMembershipHistory();
-        List<ErrorVo> errorVos = new ArrayList<>();
-        for (BookSaleCommand bookSaleCommand : bookSaleCommands) {
-            doSaleBookOne(bookSaleCommand, errorVos, activeBuyerMembership);
+        try {
+            User buyer = userUtils.getUser();
+            Optional<BuyerMembershipHistory> activeBuyerMembership = userUtils.getActiveBuyerMembershipHistory(buyer);
+            List<ErrorVo> errorVos = new ArrayList<>();
+            for (BookSaleCommand bookSaleCommand : bookSaleCommands) {
+                doSaleBookOne(bookSaleCommand, errorVos, activeBuyerMembership, buyer);
+            }
+            return errorVos;
+        } catch (Exception e) {
+            logger.error("Error while books sale", e);
+            throw e;
         }
-        return errorVos;
     }
 }

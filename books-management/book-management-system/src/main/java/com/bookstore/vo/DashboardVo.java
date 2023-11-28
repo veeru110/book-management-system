@@ -2,11 +2,31 @@ package com.bookstore.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.List;
+
 public class DashboardVo {
 
     private Integer registeredUsers;
 
-    private Integer noOfBooksInStore;
+    private BookStoreStock bookStoreStock;
+
+    public BookStoreStock getBookStoreStock() {
+        return bookStoreStock;
+    }
+
+    public void setBookStoreStock(BookStoreStock bookStoreStock) {
+        this.bookStoreStock = bookStoreStock;
+    }
+
+    private BookStoreSalesInfo bookStoreSalesInfo;
+
+    public BookStoreSalesInfo getBookStoreSalesInfo() {
+        return bookStoreSalesInfo;
+    }
+
+    public void setBookStoreSalesInfo(BookStoreSalesInfo bookStoreSalesInfo) {
+        this.bookStoreSalesInfo = bookStoreSalesInfo;
+    }
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private String failureMessage;
@@ -27,11 +47,4 @@ public class DashboardVo {
         this.registeredUsers = registeredUsers;
     }
 
-    public Integer getNoOfBooksInStore() {
-        return noOfBooksInStore;
-    }
-
-    public void setNoOfBooksInStore(Integer noOfBooksInStore) {
-        this.noOfBooksInStore = noOfBooksInStore;
-    }
 }

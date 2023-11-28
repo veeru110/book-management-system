@@ -26,8 +26,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final UserDetailsService userDetailsService;
 
-    private final ThreadLocal<String> threadLocalAuthBearer = new ThreadLocal<>();
-
     private static final Logger logger = LogManager.getLogger(JWTAuthenticationFilter.class);
 
     @Autowired
@@ -50,7 +48,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String authHeader = request.getHeader(AUTHORIZATION);
-            logger.info("Auth Header {}",authHeader);
+            logger.info("Auth Header {}", authHeader);
             if (!StringUtils.startsWith(authHeader, BEARER)) {
                 //send to Dispatcher servlet
                 filterChain.doFilter(request, response);
@@ -68,7 +66,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
-            threadLocalAuthBearer.set(authHeader);
             //send to Dispatcher servlet
             filterChain.doFilter(request, response);
         } catch (Exception e) {

@@ -50,15 +50,13 @@ public class UserServiceImpl implements IUserService {
     private final IUserManager userManager;
     private final MailService mailService;
 
-    private final UserUtils userUtils;
-
     private final BookRackManagementService bookRackManagementService;
 
     private static final Mapper mapper = new DozerBeanMapper();
 
     @Autowired
     public UserServiceImpl(UserDetailsService userDetailsService, AuthenticationManager authenticationManager,
-                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager, BookRackManagementService bookRackManagementService, MailService mailService, UserUtils userUtils) {
+                           JWTService jwtService, PasswordEncoder passwordEncoder, IUserManager userManager, BookRackManagementService bookRackManagementService, MailService mailService) {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
@@ -66,7 +64,6 @@ public class UserServiceImpl implements IUserService {
         this.userManager = userManager;
         this.bookRackManagementService = bookRackManagementService;
         this.mailService = mailService;
-        this.userUtils = userUtils;
     }
 
     @Override
@@ -74,7 +71,7 @@ public class UserServiceImpl implements IUserService {
     public UserRegistrationResponseVo registerUser(UserRegistrationCommand userRegistrationCommand, String privateKey) throws Exception {
         try {
             if (Objects.equals(userRegistrationCommand.getRole(), UserRole.ADMIN)) {
-                if (!StringUtils.equals(new String(JWTService.getRawSha256Key()), privateKey)) {
+                if (!StringUtils.equals(JWTService.getRawSha256Key(), privateKey)) {
                     throw new AuthenticationServiceException("Not allowed");
                 }
             }
@@ -97,6 +94,11 @@ public class UserServiceImpl implements IUserService {
         Map<String, BookRack> allBookRacksMap = allBookRacks.stream().collect(Collectors.toMap(BookRack::getRackName, a -> a));
         Set<BookRack> userInterestedBookRacks = new HashSet<>();
         for (String genreInterested : genresInterested) {
+            if(StringUtils.isEmpty(genreInterested)){
+                continue;
+            }
+            genreInterested = StringUtils.trim(genreInterested);
+            genreInterested = StringUtils.capitalize(genreInterested);
             if (allBookRacks.contains(new BookRack(genreInterested))) {
                 userInterestedBookRacks.add(allBookRacksMap.get(genreInterested));
             }

@@ -1,16 +1,32 @@
 package com.bookstore.model;
 
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Embeddable
 public class BookId implements Serializable {
 
-    private final String bookName;
+    private String bookName;
 
-    private final Integer edition;
+    private Integer edition;
 
-    public BookId(String bookName, Integer edition) {
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public void setBookName(String bookName) {
         this.bookName = bookName;
+    }
+
+    public Integer getEdition() {
+        return edition;
+    }
+
+    public void setEdition(Integer edition) {
         this.edition = edition;
     }
 

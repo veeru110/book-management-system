@@ -12,5 +12,5 @@ import java.util.List;
 public interface BookManagementService {
     List<ErrorVo> addBooksStock(List<BooksCommand> booksCommands) throws RuntimeException, MessagingException, TemplateException, IOException;
 
-    List<ErrorVo> saleBooks(List<BookSaleCommand> bookSaleCommands);
+    List<ErrorVo> saleBooks(List<BookSaleCommand> bookSaleCommands) throws Exception;
 }

@@ -1,11 +1,12 @@
 plugins {
     id 'java'
+    id 'java-library'
     id 'org.springframework.boot' version '3.2.0-M1'
     id 'io.spring.dependency-management' version '1.1.2'
 }
 
 group = 'com.bookstore'
-version = '0.0.1-SNAPSHOT'
+//version = '0.0.1-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
@@ -18,39 +19,47 @@ repositories {
 
 dependencies {
 
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.1.0'
+    api 'org.springframework.boot:spring-boot-starter-web:3.1.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
 
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+    api 'org.springframework.boot:spring-boot-starter-jdbc'
+    api group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
 
-    implementation 'org.springframework.boot:spring-boot-starter-security:3.0.5'
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    api 'org.springframework.boot:spring-boot-starter-security:3.0.5'
+    api 'io.jsonwebtoken:jjwt-api:0.11.5'
+    api 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    api 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-    implementation 'commons-lang:commons-lang:2.6'
-    implementation 'net.sf.dozer:dozer:5.5.1'
-    implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.2'
-    implementation 'org.springframework.boot:spring-boot-starter-mail:3.1.1'
-    implementation 'org.freemarker:freemarker:2.3.31'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    api 'commons-lang:commons-lang:2.6'
+    api 'net.sf.dozer:dozer:5.5.1'
+    api 'org.springframework.boot:spring-boot-starter-validation:3.1.2'
+    api 'org.springframework.boot:spring-boot-starter-mail:3.1.1'
+    api 'org.freemarker:freemarker:2.3.31'
+    api 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
 }
 
-/*sourceSets {
-    main {
-        java {
-            srcDirs("src/main/java")
-        }
-        resources {
-            srcDirs("src/main/resources")
-        }
-    }
-}*/
+sourceSets {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+configurations.api.setCanBeResolved(true)
+task packageZip(type: Zip, dependsOn: jar) {
+    dirMode = 0755
+    fileMode = 0755
+    into("lib") {
+        from configurations.api
+        from jar
+    }
+    into("config") {
+        from "$projectDir/src/main/resources"
+    }
+}
+
+assemble.dependsOn(packageZip)

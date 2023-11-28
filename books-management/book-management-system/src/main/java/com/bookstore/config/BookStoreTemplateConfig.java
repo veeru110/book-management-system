@@ -8,9 +8,7 @@ import org.springframework.context.annotation.Primary;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.TimeZone;
 

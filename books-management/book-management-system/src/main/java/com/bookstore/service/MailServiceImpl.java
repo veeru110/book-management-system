@@ -15,11 +15,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static com.bookstore.constants.Constants.BOOK_STORE_ASYNC_TASK_EXECUTOR_BEAN_NAME;
 
 @Service
@@ -93,6 +96,9 @@ public class MailServiceImpl implements MailService {
     @Override
     @Async(BOOK_STORE_ASYNC_TASK_EXECUTOR_BEAN_NAME)
     public void sendEmailWithTable(EmailEvents emailEvents, User user, EmailTableVo emailTableVo) throws MessagingException, TemplateException, IOException {
+        if (CollectionUtils.isEmpty(emailTableVo.getDataItr())) {
+            return;
+        }
         String greeting = emailEvents.getGreeting().formatted(user.getRole().toString());
         String name = user.getFirstName();
         String body = emailEvents.getBody().formatted(user.getRole().toString());
@@ -106,6 +112,7 @@ public class MailServiceImpl implements MailService {
         }
         emailDataModel.put("name", name);
         emailDataModel.put("body", body);
+        emailDataModel.put("tableExists", true);
         emailDataModel.put("column1", emailTableVo.getColumn1Header());
         emailDataModel.put("column2", emailTableVo.getColumn2Header());
         emailDataModel.put("dataItr", emailTableVo.getDataItr());

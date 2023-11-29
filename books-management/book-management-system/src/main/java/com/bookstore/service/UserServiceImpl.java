@@ -75,6 +75,10 @@ public class UserServiceImpl implements IUserService {
                     throw new AuthenticationServiceException("Not allowed");
                 }
             }
+            Optional<User> userOptional = userManager.findByUserName(userRegistrationCommand.getEmail());
+            if (userOptional.isPresent()) {
+                throw new Exception("User Already exists");
+            }
             User user = mapper.map(userRegistrationCommand, User.class);
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
@@ -94,7 +98,7 @@ public class UserServiceImpl implements IUserService {
         Map<String, BookRack> allBookRacksMap = allBookRacks.stream().collect(Collectors.toMap(BookRack::getRackName, a -> a));
         Set<BookRack> userInterestedBookRacks = new HashSet<>();
         for (String genreInterested : genresInterested) {
-            if(StringUtils.isEmpty(genreInterested)){
+            if (StringUtils.isEmpty(genreInterested)) {
                 continue;
             }
             genreInterested = StringUtils.trim(genreInterested);

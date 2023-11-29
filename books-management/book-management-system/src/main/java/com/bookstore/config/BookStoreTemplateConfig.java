@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -17,12 +18,12 @@ import java.util.TimeZone;
 public class BookStoreTemplateConfig {
 
     @Value("${templates.dir}")
-    private String templatesDir;
+    private String templatesDirPath;
 
     private File getTemplatesDir() throws FileNotFoundException {
-        URL pathURL = BookStoreTemplateConfig.class.getClassLoader().getResource(templatesDir);
-        if (Objects.isNull(pathURL)) throw new FileNotFoundException("Templates Dir doesn't exist");
-        return new File(pathURL.getFile());
+        File templatesDir = new File(templatesDirPath);
+        if (!Files.exists(templatesDir.toPath())) throw new FileNotFoundException("Templates Dir doesn't exist");
+        return templatesDir;
     }
 
     @Bean

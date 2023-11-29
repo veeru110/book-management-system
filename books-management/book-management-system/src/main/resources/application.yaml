@@ -32,3 +32,6 @@ email:
     port: 587
   username: bookstore29112023@gmail.com
   password: essf vcsh lrku faxc
+
+templates:
+  dir: templates

@@ -1,6 +1,7 @@
 package com.bookstore.config;
 
 import freemarker.template.TemplateExceptionHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -15,8 +16,11 @@ import java.util.TimeZone;
 @Configuration
 public class BookStoreTemplateConfig {
 
+    @Value("${templates.dir}")
+    private String templatesDir;
+
     private File getTemplatesDir() throws FileNotFoundException {
-        URL pathURL = this.getClass().getClassLoader().getResource("templates");
+        URL pathURL = BookStoreTemplateConfig.class.getClassLoader().getResource(templatesDir);
         if (Objects.isNull(pathURL)) throw new FileNotFoundException("Templates Dir doesn't exist");
         return new File(pathURL.getFile());
     }

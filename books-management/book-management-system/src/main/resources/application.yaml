@@ -8,8 +8,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/book_store
-    username: akhil
-    password: "@Khil401"
+    username: root
+    password: Veerain111$
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 server:
@@ -30,5 +30,5 @@ email:
   server:
     host: smtp.gmail.com
     port: 587
-  username: akhil.ambati9030@gmail.com
-  password: tqxv zepj onxr ahuk
+  username: bookstore29112023@gmail.com
+  password: essf vcsh lrku faxc

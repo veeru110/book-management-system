@@ -64,6 +64,12 @@ public class BuyerMembershipServiceImpl implements BuyerMembershipService {
     }
 
     @Override
+    public List<MembershipTypeVo> getAllAvailableMemberships() {
+        List<MembershipTypes> membershipTypes = membershipManager.getAllMemberships();
+        return membershipTypes.stream().map(m -> mapper.map(m, MembershipTypeVo.class)).collect(Collectors.toList());
+    }
+
+    @Override
     public BuyerMembershipVo buyMembership(BuyerMembershipCommand buyerMembershipCommand) throws Exception {
         try {
             User user = userUtils.getUser();

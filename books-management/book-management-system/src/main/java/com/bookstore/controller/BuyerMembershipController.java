@@ -1,6 +1,7 @@
 package com.bookstore.controller;
 
 import com.bookstore.command.BuyerMembershipCommand;
+import com.bookstore.model.MembershipTypes;
 import com.bookstore.service.BuyerMembershipService;
 import com.bookstore.vo.BuyerMembershipVo;
 import com.bookstore.vo.MembershipTypeVo;
@@ -26,7 +27,13 @@ public class BuyerMembershipController {
         this.buyerMembershipService = buyerMembershipService;
     }
 
-    @GetMapping("/getAllMemberships")
+    @GetMapping("/getAllAvailableMemberships")
+    public ResponseEntity<List<MembershipTypeVo>> getAllAvailableMemberships(){
+        List<MembershipTypeVo> membershipTypeVos = buyerMembershipService.getAllAvailableMemberships();
+        return new ResponseEntity<>(membershipTypeVos,HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllUserMemberships")
     public ResponseEntity<List<BuyerMembershipVo>> getAllBuyerMemberships() {
         List<BuyerMembershipVo> buyerMembershipVos = buyerMembershipService.getAllBuyersMemberships();
         return new ResponseEntity<>(buyerMembershipVos, HttpStatus.OK);
